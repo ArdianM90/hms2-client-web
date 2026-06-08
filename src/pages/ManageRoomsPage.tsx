@@ -1,15 +1,31 @@
-import {Box, Typography, Button, Card, CardContent, Grid, Stack} from "@mui/material";
-import type {Room} from "../types/Room.ts";
-import {useNavigate} from "react-router-dom";
-
-const mockRooms: Room[] = [
-    {id: 1, roomNumber: "101", capacity: 2, pricePerNight: 250, floor: 1},
-    {id: 2, roomNumber: "102", capacity: 3, pricePerNight: 320, floor: 1},
-    {id: 3, roomNumber: "201", capacity: 2, pricePerNight: 280, floor: 2},
-];
+import {Box, Typography, Button, Grid, Stack, CircularProgress, Alert} from "@mui/material";
+import { useEffect, useState } from "react";
+import type { Room } from "../types/Room.ts";
+import { roomApi } from "../api/roomApi.ts";
+import { useNavigate } from "react-router-dom";
+import RoomCard from "../components/RoomCard.tsx";
 
 export default function ManageRoomsPage() {
     const navigate = useNavigate();
+    const [rooms, setRooms] = useState<Room[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        roomApi.getRooms()
+            .then(setRooms)
+            .catch(() => setError("Nie udało się pobrać listy pokoi."))
+            .finally(() => setLoading(false));
+    }, []);
+
+    const handleDelete = async (id: number) => {
+        try {
+            await roomApi.deleteRoom(id);
+            setRooms(prev => prev.filter(r => r.id !== id));
+        } catch {
+            setError("Nie udało się usunąć pokoju.");
+        }
+    };
 
     return (
         <Box>
@@ -17,42 +33,34 @@ export default function ManageRoomsPage() {
                 <Typography variant="h4">
                     Zarządzanie pokojami
                 </Typography>
-
-                <Button variant="contained" sx={{bgcolor: "#6b1020"}} onClick={() => navigate("/admin/rooms/add")}>
+                <Button
+                    variant="contained"
+                    sx={{ bgcolor: "#6b1020" }}
+                    onClick={() => navigate("/admin/rooms/add")}
+                >
                     Dodaj pokój
                 </Button>
             </Stack>
 
-            <Grid container spacing={3}>
-                {mockRooms.map((room) => (
-                    <Grid size={{ xs: 12, md: 4 }} key={room.id}>
-                        <Card
-                            sx={{
-                                borderLeft: "5px solid #6b1020",
-                                "&:hover": {boxShadow: 4},
-                            }}
-                        >
-                            <CardContent>
-                                <Typography variant="h6">
-                                    Pokój {room.roomNumber}
-                                </Typography>
+            {error && (
+                <Alert severity="error" sx={{ mb: 3 }}>
+                    {error}
+                </Alert>
+            )}
 
-                                <Typography variant="body2">
-                                    Osoby: {room.capacity}
-                                </Typography>
-
-                                <Typography variant="body2">
-                                    Cena: {room.pricePerNight} zł
-                                </Typography>
-
-                                <Typography variant="body2">
-                                    Piętro: {room.floor}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+            {loading ? (
+                <Box sx={{ display: "flex", justifyContent: "center", mt: 6 }}>
+                    <CircularProgress sx={{ color: "#6b1020" }} />
+                </Box>
+            ) : (
+                <Grid container spacing={3}>
+                    {rooms.map((room) => (
+                        <Grid size={{ xs: 12, md: 4 }} key={room.id}>
+                            <RoomCard room={room} onDelete={handleDelete} />
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
         </Box>
     );
 }
