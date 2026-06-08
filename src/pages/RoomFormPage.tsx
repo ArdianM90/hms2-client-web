@@ -5,7 +5,7 @@ import {
 import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import type {RoomStandard} from "../types/RoomStandard.ts";
-import type {CreateRoomRequest} from "../types/CreateRoomRequest.ts";
+import type {RoomCreateRequest} from "../types/RoomCreateRequest.ts";
 import {roomApi} from "../api/roomApi.ts";
 
 type RoomForm = {
@@ -61,7 +61,7 @@ export default function AddRoomPage() {
         }
 
         setLoading(true);
-        const request: CreateRoomRequest = {
+        const request: RoomCreateRequest = {
             roomNumber: form.roomNumber,
             roomStandardCode: form.roomStandardCode,
             capacity: Number(form.capacity),

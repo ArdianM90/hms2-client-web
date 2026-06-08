@@ -1,4 +1,4 @@
-export type CreateRoomRequest = {
+export type RoomUpdateRequest = {
     roomNumber: string;
     roomStandardCode: string;
     capacity: number;

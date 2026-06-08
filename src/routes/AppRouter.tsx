@@ -11,6 +11,7 @@ import AdminLayout from "../layouts/AdminLayout.tsx";
 import ManageHotelPage from "../pages/ManageHotelPage.tsx";
 import LogoutPage from "../pages/LogoutPage.tsx";
 import AddRoomPage from "../pages/RoomFormPage.tsx";
+import EditRoomPage from "../pages/EditRoomPage.tsx";
 
 export default function AppRouter() {
     return (
@@ -24,14 +25,13 @@ export default function AppRouter() {
                     <Route path="/logout" element={<LogoutPage />} />
                 </Route>
                 <Route element={<ProtectedRoute />}>
-                    <Route element={<ProtectedRoute />}>
-                        <Route element={<Layout />}>
-                            <Route path="admin" element={<AdminLayout />}>
-                                <Route index element={<Navigate to="rooms" replace />}/>
-                                <Route path="rooms" element={<ManageRoomsPage />}/>
-                                <Route path="rooms/add" element={<AddRoomPage />}/>
-                                <Route path="hotel" element={<ManageHotelPage />}/>
-                            </Route>
+                    <Route element={<Layout />}>
+                        <Route path="admin" element={<AdminLayout />}>
+                            <Route index element={<Navigate to="rooms" replace />}/>
+                            <Route path="rooms" element={<ManageRoomsPage />}/>
+                            <Route path="rooms/add" element={<AddRoomPage />}/>
+                            <Route path="rooms/:id/edit" element={<EditRoomPage />} />
+                            <Route path="hotel" element={<ManageHotelPage />}/>
                         </Route>
                     </Route>
                 </Route>

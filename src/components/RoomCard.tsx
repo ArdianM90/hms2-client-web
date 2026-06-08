@@ -1,7 +1,9 @@
-import {Box, Card, CardContent, Chip, Divider, IconButton, Typography} from "@mui/material";
+import {Box, Card, CardContent, Chip, Divider, IconButton, Stack, Typography} from "@mui/material";
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined';
 import type { Room } from "../types/Room.ts";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     room: Room;
@@ -9,6 +11,8 @@ type Props = {
 };
 
 export default function RoomCard({ room, onDelete }: Props) {
+    const navigate = useNavigate();
+
     return (
         <Card
             sx={{
@@ -41,18 +45,32 @@ export default function RoomCard({ room, onDelete }: Props) {
                             </Box>
                         </Box>
                     </Box>
-                    <IconButton
-                        size="small"
-                        onClick={() => onDelete(room.id)}
-                        sx={{
-                            color: "#a32d2d",
-                            border: "0.5px solid #a32d2d",
-                            borderRadius: 1,
-                            "&:hover": { bgcolor: "#fcebeb" },
-                        }}
-                    >
-                        <DeleteOutlinedIcon fontSize="small" />
-                    </IconButton>
+                    <Stack direction="row" spacing={0.5}>
+                        <IconButton
+                            size="small"
+                            onClick={() => navigate(`/admin/rooms/${room.id}/edit`)}
+                            sx={{
+                                color: "#6b1020",
+                                border: "0.5px solid #6b1020",
+                                borderRadius: 1,
+                                "&:hover": { bgcolor: "#fcebeb" },
+                            }}
+                        >
+                            <EditNoteOutlinedIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                            size="small"
+                            onClick={() => onDelete(room.id)}
+                            sx={{
+                                color: "#a32d2d",
+                                border: "0.5px solid #a32d2d",
+                                borderRadius: 1,
+                                "&:hover": { bgcolor: "#fcebeb" },
+                            }}
+                        >
+                            <DeleteOutlinedIcon fontSize="small" />
+                        </IconButton>
+                    </Stack>
                 </Box>
 
                 <Divider sx={{ my: 1 }} />
