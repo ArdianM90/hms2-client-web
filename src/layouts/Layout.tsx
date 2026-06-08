@@ -1,35 +1,23 @@
 import { Outlet, Link } from "react-router-dom";
-import {
-    AppBar,
-    Toolbar,
-    Typography,
-    Box,
-    Container,
-    Button,
-    Stack,
-    Divider,
-} from "@mui/material";
+import {AppBar, Toolbar, Typography, Box, Container, Button, Stack, Divider } from "@mui/material";
 import { userManager } from "../auth/oidcClient";
 
 export default function Layout() {
-    const stackProps = {
-        direction: "row" as const,
-        justifyContent: "space-between" as const,
-        flexWrap: "wrap" as const,
-        gap: 2,
-    };
 
     const logout = async () => {
+        const user = await userManager.getUser();
+        console.log("id_token:", user?.id_token);
         await userManager.signoutRedirect();
     }
 
     return (
         <Box
             sx={{
-                minHeight: "100vh",
+                height: "100vh",
                 display: "flex",
                 flexDirection: "column",
                 bgcolor: "#f6f4f5",
+                overflow: "hidden"
             }}
         >
             <AppBar
@@ -53,17 +41,11 @@ export default function Layout() {
                     <Box sx={{ flexGrow: 1 }} />
 
                     <Stack direction="row" spacing={1}>
-                        <Button color="inherit" component={Link} to="/">
+                        <Button component={Link} to="/dashboard" color="inherit">
                             Dashboard
                         </Button>
-                        <Button color="inherit" component={Link} to="/reservations">
-                            Rezerwacje
-                        </Button>
-                        <Button color="inherit" component={Link} to="/rooms">
-                            Pokoje
-                        </Button>
-                        <Button color="inherit" component={Link} to="/admin">
-                            Admin
+                        <Button component={Link} to="/admin" color="inherit">
+                            Administracja
                         </Button>
                         <Button
                             variant="outlined"
@@ -79,15 +61,16 @@ export default function Layout() {
                 </Toolbar>
             </AppBar>
 
-            <Container
-                maxWidth="lg"
+            <Box
                 sx={{
                     flex: 1,
                     py: 4,
+                    px: { xs: 2, md: "auto" },
+                    overflow: "auto"
                 }}
             >
                 <Outlet />
-            </Container>
+            </Box>
 
             <Box
                 component="footer"
@@ -100,14 +83,9 @@ export default function Layout() {
             >
                 <Container maxWidth="lg">
                     <Divider sx={{ mb: 2, borderColor: "rgba(255,255,255,0.1)" }} />
-
-                    <Stack spacing={1} {...stackProps}>
-                        <Typography variant="body2">
-                            © {new Date().getFullYear()} Adrian Mieńkowski
-                        </Typography>
-                        <Typography variant="body2">
-                            HMS – Hotel Management System
-                        </Typography>
+                    <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
+                        <Typography variant="body2">© {new Date().getFullYear()} Adrian Mieńkowski</Typography>
+                        <Typography variant="body2">HMS – Hotel Management System</Typography>
                     </Stack>
                 </Container>
             </Box>
