@@ -1,12 +1,22 @@
 import { useEffect } from "react";
-import { handleCallback } from "../auth/callback";
+import {useNavigate} from "react-router-dom";
+import {userManager} from "../auth/oidcClient.ts";
+import {Box, CircularProgress} from "@mui/material";
 
 export default function CallbackPage() {
-    useEffect(() => {
-        handleCallback().then(() => {
-            window.location.href = "/dashboard";
-        });
-    }, []);
+    const navigate = useNavigate();
 
-    return <div>Logging in...</div>;
+    useEffect(() => {
+        userManager.signinRedirectCallback().then(() => {
+            const redirectTo = sessionStorage.getItem("redirectAfterLogin") ?? "/dashboard";
+            sessionStorage.removeItem("redirectAfterLogin");
+            navigate(redirectTo, { replace: true });
+        });
+    }, [navigate]);
+
+    return (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+            <CircularProgress sx={{ color: "#6b1020" }} />
+        </Box>
+    );
 }

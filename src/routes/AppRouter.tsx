@@ -6,12 +6,13 @@ import CallbackPage from "../pages/CallbackPage.tsx";
 import PublicOnlyRoute from "./PublicOnlyRoute.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import Layout from "../layouts/Layout.tsx";
-import ManageRoomsPage from "../pages/ManageRoomsPage.tsx";
+import ManageRoomsPage from "../pages/admin/rooms/ManageRoomsPage.tsx";
 import AdminLayout from "../layouts/AdminLayout.tsx";
-import ManageHotelPage from "../pages/ManageHotelPage.tsx";
+import ManageHotelPage from "../pages/admin/hotel/ManageHotelPage.tsx";
 import LogoutPage from "../pages/LogoutPage.tsx";
-import AddRoomPage from "../pages/RoomFormPage.tsx";
-import EditRoomPage from "../pages/EditRoomPage.tsx";
+import RoomAddPage from "../pages/admin/rooms/RoomAddPage.tsx";
+import RoomEditPage from "../pages/admin/rooms/RoomEditPage.tsx";
+import RoomDetailsPage from "../pages/admin/rooms/RoomDetailsPage.tsx";
 
 export default function AppRouter() {
     return (
@@ -29,8 +30,9 @@ export default function AppRouter() {
                         <Route path="admin" element={<AdminLayout />}>
                             <Route index element={<Navigate to="rooms" replace />}/>
                             <Route path="rooms" element={<ManageRoomsPage />}/>
-                            <Route path="rooms/add" element={<AddRoomPage />}/>
-                            <Route path="rooms/:id/edit" element={<EditRoomPage />} />
+                            <Route path="rooms/add" element={<RoomAddPage />}/>
+                            <Route path="/admin/rooms/:id" element={<RoomDetailsPage />} />
+                            <Route path="rooms/:id/edit" element={<RoomEditPage />} />
                             <Route path="hotel" element={<ManageHotelPage />}/>
                         </Route>
                     </Route>

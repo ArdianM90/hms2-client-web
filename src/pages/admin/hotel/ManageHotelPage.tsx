@@ -1,5 +1,5 @@
 import { Box, Typography, Button, Card, CardContent, Stack, TextField, Divider } from "@mui/material";
-import type {Hotel} from "../types/Hotel.ts";
+import type {Hotel} from "../../../types/Hotel.ts";
 
 const mockHotel: Hotel = {
     name: "Hotel Royal",

@@ -1,9 +1,10 @@
 import {Box, Typography, Button, Grid, Stack, CircularProgress, Alert} from "@mui/material";
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { useEffect, useState } from "react";
-import type { Room } from "../types/Room.ts";
-import { roomApi } from "../api/roomApi.ts";
+import type { Room } from "../../../types/Room.ts";
+import { roomApi } from "../../../api/roomApi.ts";
 import { useNavigate } from "react-router-dom";
-import RoomCard from "../components/RoomCard.tsx";
+import RoomCard from "../../../components/RoomCard.tsx";
 
 export default function ManageRoomsPage() {
     const navigate = useNavigate();
@@ -37,6 +38,7 @@ export default function ManageRoomsPage() {
                     variant="contained"
                     sx={{ bgcolor: "#6b1020" }}
                     onClick={() => navigate("/admin/rooms/add")}
+                    startIcon={<AddCircleOutlineOutlinedIcon sx={{ color: "white" }} />}
                 >
                     Dodaj pokój
                 </Button>

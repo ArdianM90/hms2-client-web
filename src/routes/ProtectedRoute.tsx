@@ -9,6 +9,7 @@ export default function ProtectedRoute() {
     useEffect(() => {
         isAuthenticated().then(auth => {
             if (!auth) {
+                sessionStorage.setItem("redirectAfterLogin", window.location.pathname);
                 login();
             } else {
                 setAuthed(true);

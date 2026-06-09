@@ -15,10 +15,22 @@ export default function RoomCard({ room, onDelete }: Props) {
 
     return (
         <Card
+            onClick={() => navigate(`/admin/rooms/${room.id}`)}
             sx={{
                 borderLeft: "4px solid #6b1020",
                 borderRadius: "0 12px 12px 0",
-                "&:hover": { boxShadow: 4 },
+                cursor: "pointer",
+                transition: "all 0.2s ease-in-out",
+                boxShadow: 1,
+                "&:hover": {
+                    boxShadow: 6,
+                    transform: "translateY(-2px)",
+                    bgcolor: "rgba(107,16,32,0.03)",
+                },
+                "&:active": {
+                    transform: "translateY(0px)",
+                    boxShadow: 3,
+                },
             }}
         >
             <CardContent>
@@ -48,7 +60,10 @@ export default function RoomCard({ room, onDelete }: Props) {
                     <Stack direction="row" spacing={0.5}>
                         <IconButton
                             size="small"
-                            onClick={() => navigate(`/admin/rooms/${room.id}/edit`)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/admin/rooms/${room.id}/edit`)
+                            }}
                             sx={{
                                 color: "#6b1020",
                                 border: "0.5px solid #6b1020",
@@ -60,7 +75,10 @@ export default function RoomCard({ room, onDelete }: Props) {
                         </IconButton>
                         <IconButton
                             size="small"
-                            onClick={() => onDelete(room.id)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(room.id)
+                            }}
                             sx={{
                                 color: "#a32d2d",
                                 border: "0.5px solid #a32d2d",
