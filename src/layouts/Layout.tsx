@@ -47,6 +47,9 @@ export default function Layout() {
                         <Button component={Link} to="/admin" color="inherit">
                             Administracja
                         </Button>
+                        <Button component={Link} to="/reservation" color="inherit">
+                            Rezerwacje
+                        </Button>
                         <Button
                             variant="outlined"
                             sx={{

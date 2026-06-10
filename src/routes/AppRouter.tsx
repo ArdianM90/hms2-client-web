@@ -13,6 +13,7 @@ import LogoutPage from "../pages/LogoutPage.tsx";
 import RoomAddPage from "../pages/admin/rooms/RoomAddPage.tsx";
 import RoomEditPage from "../pages/admin/rooms/RoomEditPage.tsx";
 import RoomDetailsPage from "../pages/admin/rooms/RoomDetailsPage.tsx";
+import ReservationPage from "../pages/reservation/ReservationPage.tsx";
 
 export default function AppRouter() {
     return (
@@ -35,6 +36,9 @@ export default function AppRouter() {
                             <Route path="rooms/:id/edit" element={<RoomEditPage />} />
                             <Route path="hotel" element={<ManageHotelPage />}/>
                         </Route>
+                    </Route>
+                    <Route element={<Layout />}>
+                        <Route path="reservation" element={<ReservationPage />} />
                     </Route>
                 </Route>
             </Routes>
