@@ -1,6 +1,6 @@
 import {Box, Card, CardContent, Chip, Stack, Typography} from "@mui/material";
 import HotelOutlinedIcon from "@mui/icons-material/HotelOutlined";
-import type {RoomOffer} from "../types/ReservationOffer.tsx";
+import type {RoomOffer} from "../types/ReservationOffer.ts";
 
 type Props = {
     room: RoomOffer;

@@ -1,6 +1,6 @@
 import {Alert, Box, Stack, Typography} from "@mui/material";
 import {useLocation} from "react-router-dom";
-import type {ReservationOffer} from "../../types/ReservationOffer";
+import type {ReservationOffer} from "../../types/ReservationOffer.ts";
 import {ReservationSummaryCard} from "../../components/ReservationSummaryCard.tsx";
 import {ReservationRoomCard} from "../../components/ReservationRoomCard.tsx";
 

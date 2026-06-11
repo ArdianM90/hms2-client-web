@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, Chip, Divider, Stack, Typography } from "@mui/material";
-import type { ReservationOffer } from "../types/ReservationOffer";
+import type { ReservationOffer } from "../types/ReservationOffer.ts";
 import HotelOutlinedIcon from "@mui/icons-material/HotelOutlined";
 
 type Props = {

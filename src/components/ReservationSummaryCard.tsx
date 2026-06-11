@@ -1,6 +1,8 @@
 import {Box, Button, Card, CardContent, Divider, Stack, Typography} from "@mui/material";
-import type {ReservationOffer} from "../types/ReservationOffer.tsx";
+import type {ReservationOffer} from "../types/ReservationOffer.ts";
 import {useNavigate} from "react-router-dom";
+import type {MakeReservationRequest} from "../types/MakeReservationRequest.ts";
+import {reservationApi} from "../api/reservationApi.ts";
 
 type Props = {
     offer: ReservationOffer;
@@ -10,6 +12,17 @@ type Props = {
 
 export function ReservationSummaryCard({ offer, startDate, endDate }: Props) {
     const navigate = useNavigate();
+
+    const handleReservation = async () => {
+        const request: MakeReservationRequest = {
+            roomIds: offer.rooms.map(r => r.roomId),
+            dateStart: startDate,
+            dateEnd: endDate,
+            totalPrice: offer.totalPrice,
+        };
+        await reservationApi.makeReservation(request);
+        navigate("/reservation/success");
+    };
 
     return (
         <Card sx={{borderLeft: "5px solid #6b1020"}}>
@@ -49,6 +62,7 @@ export function ReservationSummaryCard({ offer, startDate, endDate }: Props) {
                                 bgcolor: "#87182b",
                             },
                         }}
+                        onClick={() => handleReservation()}
                     >
                         Zarezerwuj
                     </Button>
