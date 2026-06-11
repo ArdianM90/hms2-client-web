@@ -22,7 +22,7 @@ export default function ManageRoomsPage() {
     const handleDelete = async (id: number) => {
         try {
             await roomApi.deleteRoom(id);
-            setRooms(prev => prev.filter(r => r.id !== id));
+            setRooms(prev => prev.filter(r => r.roomId !== id));
         } catch {
             setError("Nie udało się usunąć pokoju.");
         }
@@ -57,7 +57,7 @@ export default function ManageRoomsPage() {
             ) : (
                 <Grid container spacing={3}>
                     {rooms.map((room) => (
-                        <Grid size={{ xs: 12, md: 4 }} key={room.id}>
+                        <Grid size={{ xs: 12, md: 4 }} key={room.roomId}>
                             <RoomCard room={room} onDelete={handleDelete} />
                         </Grid>
                     ))}

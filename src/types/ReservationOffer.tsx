@@ -7,6 +7,7 @@ export type RoomOffer = {
 };
 
 export type ReservationOffer = {
+    numberOfNights: number;
     totalPrice: number;
     rooms: RoomOffer[];
 };

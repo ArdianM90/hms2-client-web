@@ -53,7 +53,7 @@ export default function RoomDetailsPage() {
                 <Stack direction="row" spacing={1}>
                     <Button
                         variant="outlined"
-                        onClick={() => navigate(`/admin/rooms/${room.id}/edit`)}
+                        onClick={() => navigate(`/admin/rooms/${room.roomId}/edit`)}
                         sx={{ borderColor: "#6b1020", color: "#6b1020" }}
                     >
                         Edytuj
@@ -87,7 +87,7 @@ export default function RoomDetailsPage() {
                     <Divider sx={{ my: 2 }} />
 
                     <Typography variant="body2" color="text.secondary">
-                        ID: {room.id}
+                        ID: {room.roomId}
                     </Typography>
                 </CardContent>
             </Card>

@@ -15,7 +15,7 @@ export default function RoomCard({ room, onDelete }: Props) {
 
     return (
         <Card
-            onClick={() => navigate(`/admin/rooms/${room.id}`)}
+            onClick={() => navigate(`/admin/rooms/${room.roomId}`)}
             sx={{
                 borderLeft: "4px solid #6b1020",
                 borderRadius: "0 12px 12px 0",
@@ -62,7 +62,7 @@ export default function RoomCard({ room, onDelete }: Props) {
                             size="small"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                navigate(`/admin/rooms/${room.id}/edit`)
+                                navigate(`/admin/rooms/${room.roomId}/edit`)
                             }}
                             sx={{
                                 color: "#6b1020",
@@ -77,7 +77,7 @@ export default function RoomCard({ room, onDelete }: Props) {
                             size="small"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                onDelete(room.id)
+                                onDelete(room.roomId)
                             }}
                             sx={{
                                 color: "#a32d2d",

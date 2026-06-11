@@ -14,6 +14,7 @@ import RoomAddPage from "../pages/admin/rooms/RoomAddPage.tsx";
 import RoomEditPage from "../pages/admin/rooms/RoomEditPage.tsx";
 import RoomDetailsPage from "../pages/admin/rooms/RoomDetailsPage.tsx";
 import ReservationPage from "../pages/reservation/ReservationPage.tsx";
+import ConfirmReservationPage from "../pages/reservation/ConfirmReservationPage.tsx";
 
 export default function AppRouter() {
     return (
@@ -32,13 +33,14 @@ export default function AppRouter() {
                             <Route index element={<Navigate to="rooms" replace />}/>
                             <Route path="rooms" element={<ManageRoomsPage />}/>
                             <Route path="rooms/add" element={<RoomAddPage />}/>
-                            <Route path="/admin/rooms/:id" element={<RoomDetailsPage />} />
+                            <Route path="rooms/:id" element={<RoomDetailsPage />} />
                             <Route path="rooms/:id/edit" element={<RoomEditPage />} />
                             <Route path="hotel" element={<ManageHotelPage />}/>
                         </Route>
                     </Route>
                     <Route element={<Layout />}>
                         <Route path="reservation" element={<ReservationPage />} />
+                        <Route path="reservation/confirmation" element={<ConfirmReservationPage />} />
                     </Route>
                 </Route>
             </Routes>

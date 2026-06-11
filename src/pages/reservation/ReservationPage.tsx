@@ -9,12 +9,12 @@ import type {SearchReservationOffersRequest} from "../../types/SearchReservation
 import type {ReservationOffer} from "../../types/ReservationOffer.tsx";
 import ReservationOfferCard from "../../components/ReservationOfferCard.tsx";
 import type {AxiosErrorResponse} from "../../api/apiTypes.ts";
+import {useNavigate} from "react-router-dom";
 
 export default function ReservationPage() {
+    const navigate = useNavigate();
     const [standards, setStandards] = useState<RoomStandard[]>([]);
-
     const [offers, setOffers] = useState<ReservationOffer[]>([]);
-
     const [apiError, setApiError] = useState<string | null>(null);
 
     const [filter, setFilter] = useState({
@@ -102,6 +102,16 @@ export default function ReservationPage() {
         }));
     };
 
+    const handleSelectOffer = (offer: ReservationOffer) => {
+        navigate("/reservation/confirmation", {
+            state: {
+                offer,
+                startDate: filter.startDate,
+                endDate: filter.endDate,
+            },
+        });
+    };
+
     const renderOffersContent = () => {
         if (apiError) {
             return (
@@ -130,7 +140,7 @@ export default function ReservationPage() {
                     <ReservationOfferCard
                         key={index}
                         offer={offer}
-                        onSelect={(offer) => console.log("wybrano:", offer)}
+                        onSelect={handleSelectOffer}
                     />
                 ))}
             </Stack>
