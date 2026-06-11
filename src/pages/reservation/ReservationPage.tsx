@@ -8,11 +8,14 @@ import type {ReservationFilter} from "../../types/ReservationFilter.ts";
 import type {SearchReservationOffersRequest} from "../../types/SearchReservationOffersRequest.tsx";
 import type {ReservationOffer} from "../../types/ReservationOffer.tsx";
 import ReservationOfferCard from "../../components/ReservationOfferCard.tsx";
+import type {AxiosErrorResponse} from "../../api/apiTypes.ts";
 
 export default function ReservationPage() {
     const [standards, setStandards] = useState<RoomStandard[]>([]);
 
     const [offers, setOffers] = useState<ReservationOffer[]>([]);
+
+    const [apiError, setApiError] = useState<string | null>(null);
 
     const [filter, setFilter] = useState({
         startDate: "",
@@ -56,8 +59,16 @@ export default function ReservationPage() {
         }
         const request = mapFilterToRequest(filter);
         reservationApi.searchOffers(request)
-            .then(setOffers)
-            .catch(console.error);
+            .then(data => {
+                setApiError(null);
+                setOffers(data);
+            })
+            .catch(e => {
+                const message = (e as AxiosErrorResponse)?.response?.data?.message
+                    ?? "Wystąpił błąd podczas wyszukiwania ofert.";
+                setApiError(message);
+                setOffers([]);
+            });
     }, [filter, canSearch]);
 
     const addRoom = () => {
@@ -91,50 +102,75 @@ export default function ReservationPage() {
         }));
     };
 
-    return (
-        <Box>
-
-            <Typography variant="h4" sx={{mb: 3}}>
-                Rezerwacja pokoju
-            </Typography>
-
-            <ReservationSearchForm
-                filter={filter}
-                standards={standards}
-                onFilterChange={setFilter}
-                onAddRoom={addRoom}
-                onRemoveRoom={removeRoom}
-                onUpdateRoomCapacity={updateRoomCapacity}
-            />
-
-            {!canSearch && (
+    const renderOffersContent = () => {
+        if (apiError) {
+            return (
+                <Alert severity="error">
+                    {apiError}
+                </Alert>
+            );
+        }
+        if (!canSearch) {
+            return (
                 <Alert severity="info">
                     Uzupełnij daty pobytu oraz wymagane pokoje.
                 </Alert>
-            )}
-            {canSearch && (
-                <>
+            );
+        }
+        if (offers.length === 0) {
+            return (
+                <Alert severity="warning">
+                    Brak dostępnych ofert dla podanych kryteriów.
+                </Alert>
+            );
+        }
+        return (
+            <Stack spacing={2}>
+                {offers.map((offer, index) => (
+                    <ReservationOfferCard
+                        key={index}
+                        offer={offer}
+                        onSelect={(offer) => console.log("wybrano:", offer)}
+                    />
+                ))}
+            </Stack>
+        );
+    };
+
+    return (
+        <Box>
+            <Typography variant="h4" sx={{ mb: 3 }}>
+                Rezerwacja pokoju
+            </Typography>
+
+            <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
+                <Box
+                    sx={{
+                        width: 600,
+                        flexShrink: 0,
+                        position: "sticky",
+                        top: 16,
+                        maxHeight: "calc(100vh - 100px)",
+                        overflowY: "auto",
+                    }}
+                >
+                    <ReservationSearchForm
+                        filter={filter}
+                        standards={standards}
+                        onFilterChange={setFilter}
+                        onAddRoom={addRoom}
+                        onRemoveRoom={removeRoom}
+                        onUpdateRoomCapacity={updateRoomCapacity}
+                    />
+                </Box>
+
+                <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Typography variant="h5" sx={{ mb: 2 }}>
                         Dostępne oferty
                     </Typography>
-
-                    {offers.length === 0 ? (
-                        <Alert severity="warning">
-                            Brak dostępnych ofert dla podanych kryteriów.
-                        </Alert>
-                    ) : (
-                        <Stack spacing={2}>
-                            {offers.map((offer, index) => (
-                                <ReservationOfferCard
-                                    key={index}
-                                    offer={offer}
-                                    onSelect={(offer) => console.log("wybrano:", offer)}
-                                />
-                            ))}
-                        </Stack>
-                    )}
-                </>
-            )}
+                    {renderOffersContent()}
+                </Box>
+            </Box>
         </Box>
     );
 }
