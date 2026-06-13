@@ -11,7 +11,7 @@ import ReservationOfferCard from "../../components/ReservationOfferCard.tsx";
 import type {AxiosErrorResponse} from "../../api/apiTypes.ts";
 import {useNavigate} from "react-router-dom";
 
-export default function ReservationPage() {
+export default function BookReservationPage() {
     const navigate = useNavigate();
     const [standards, setStandards] = useState<RoomStandard[]>([]);
     const [offers, setOffers] = useState<ReservationOffer[]>([]);
@@ -103,7 +103,7 @@ export default function ReservationPage() {
     };
 
     const handleSelectOffer = (offer: ReservationOffer) => {
-        navigate("/reservation/confirmation", {
+        navigate("/reservation/my", {
             state: {
                 offer,
                 startDate: filter.startDate,
