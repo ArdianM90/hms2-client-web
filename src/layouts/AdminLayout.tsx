@@ -1,6 +1,6 @@
 import RoomServiceOutlinedIcon from "@mui/icons-material/RoomServiceOutlined";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
-import EventNoteOutlinedIcon from '@mui/icons-material/EventNoteOutlined';
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import SidebarLayout from "./SidebarLayout.tsx";
 
 const items = [

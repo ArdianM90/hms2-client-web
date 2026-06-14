@@ -4,7 +4,7 @@ import type { ReservationOffer } from "../types/ReservationOffer.ts";
 import type { MakeReservationRequest } from "../types/MakeReservationRequest.ts";
 import type { ReservationInfo } from "../types/ReservationInfo.ts";
 import type { ReservationDetails } from "../types/ReservationDetails.ts";
-import type {AdminReservationInfo} from "../types/AdminReservationInfo.ts";
+import type { AdminReservationInfo } from "../types/AdminReservationInfo.ts";
 
 export const reservationApi = {
   getReservation: (reservationId: number) =>
@@ -12,8 +12,10 @@ export const reservationApi = {
       .get<ReservationDetails>(`/api/hms/reservations/${reservationId}`)
       .then((res) => res.data),
 
-      getAllReservations: () =>
-          api.get<AdminReservationInfo[]>("/api/hms/reservations/all").then((res) => res.data),
+  getAllReservations: () =>
+    api
+      .get<AdminReservationInfo[]>("/api/hms/reservations/all")
+      .then((res) => res.data),
 
   getMyReservations: () =>
     api.get<ReservationInfo[]>("/api/hms/reservations").then((res) => res.data),

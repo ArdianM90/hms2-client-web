@@ -11,10 +11,10 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { useEffect, useState } from "react";
 import { reservationApi } from "../../api/reservationApi.ts";
 import type { ReservationInfo } from "../../types/ReservationInfo.ts";
-import type {ReservationColumn} from "../../types/ReservationColumn.ts";
-import {commonColumns} from "../../config/reservationColumns.tsx";
+import type { ReservationColumn } from "../../types/ReservationColumn.ts";
+import { commonColumns } from "../../config/reservationColumns.tsx";
 import ReservationsTable from "../../components/ReservationsTable.tsx";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function MyReservationsPage() {
   const navigate = useNavigate();
@@ -28,17 +28,17 @@ export default function MyReservationsPage() {
       header: "Akcje",
       align: "right",
       render: (dto) => (
-          <Button
-              color="error"
-              startIcon={<CancelOutlinedIcon />}
-              onClick={(e) => {
-                e.stopPropagation();
-                void handleCancel(dto.reservationId);
-              }}
-              disabled={dto.reservationStatus.code === "cancelled"}
-          >
-            Anuluj
-          </Button>
+        <Button
+          color="error"
+          startIcon={<CancelOutlinedIcon />}
+          onClick={(e) => {
+            e.stopPropagation();
+            void handleCancel(dto.reservationId);
+          }}
+          disabled={dto.reservationStatus.code === "cancelled"}
+        >
+          Anuluj
+        </Button>
       ),
     },
   ];
@@ -90,11 +90,11 @@ export default function MyReservationsPage() {
 
       <Card sx={{ borderLeft: "5px solid #6b1020" }}>
         <CardContent>
-            <ReservationsTable
-                reservations={reservations}
-                columns={columns}
-                onRowClick={(dto) => navigate(`/reservation/${dto.reservationId}`)}
-            />
+          <ReservationsTable
+            reservations={reservations}
+            columns={columns}
+            onRowClick={(dto) => navigate(`/reservation/${dto.reservationId}`)}
+          />
 
           {reservations.length === 0 && (
             <Typography sx={{ mt: 2, color: "text.secondary" }}>
