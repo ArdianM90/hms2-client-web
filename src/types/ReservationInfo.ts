@@ -6,6 +6,7 @@ export type ReservationInfo = {
   updatedAt: string | null;
   startDate: string;
   endDate: string;
+  daysQty: number;
   reservationStatus: EnumValue;
   reservationSource: EnumValue;
   totalPrice: number;

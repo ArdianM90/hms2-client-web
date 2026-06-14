@@ -103,7 +103,7 @@ export default function BookReservationPage() {
   };
 
   const handleSelectOffer = (offer: ReservationOffer) => {
-    navigate("/reservation/my", {
+    navigate("/reservation/confirmation", {
       state: {
         offer,
         startDate: filter.startDate,

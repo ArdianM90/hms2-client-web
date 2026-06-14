@@ -13,10 +13,8 @@ import {
   Typography,
   Alert,
   Button,
-  IconButton,
 } from "@mui/material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { reservationApi } from "../../api/reservationApi.ts";
@@ -91,6 +89,7 @@ export default function MyReservationsPage() {
                   <TableCell>Data utworzenia</TableCell>
                   <TableCell>Data ostatniej aktualizacji</TableCell>
                   <TableCell>Data pobytu</TableCell>
+                  <TableCell>Doby hotelowe</TableCell>
                   <TableCell>Status rezerwacji</TableCell>
                   <TableCell>Źródło</TableCell>
                   <TableCell>Pokoje</TableCell>
@@ -100,66 +99,67 @@ export default function MyReservationsPage() {
               </TableHead>
 
               <TableBody>
-                {reservations.map((dto, index) => (
-                  <TableRow
-                    key={dto.reservationId}
-                    hover
-                    onClick={() =>
-                      navigate(`/reservation/my/${dto.reservationId}`)
-                    }
-                    sx={{
-                      cursor: "pointer",
-                      "&:hover": {
-                        bgcolor: "rgba(107,16,32,0.03)",
-                      },
-                    }}
-                  >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{formatDateTime(dto.createdAt)}</TableCell>
-                    <TableCell>{formatDateTime(dto.updatedAt)}</TableCell>
-                    <TableCell>
-                      od {dto.startDate} do {dto.endDate}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={dto.reservationStatus.label}
-                        size="small"
-                        sx={{
-                          bgcolor: "rgba(107,16,32,0.08)",
-                          color: "#6b1020",
-                          fontWeight: 600,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>{dto.reservationSource.label}</TableCell>
-                    <TableCell>{dto.roomsQty}</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>
-                      {dto.totalPrice} zł
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/reservation/my/${dto.reservationId}`);
-                        }}
-                      >
-                        <VisibilityOutlinedIcon />
-                      </IconButton>
-                      <Button
-                        color="error"
-                        startIcon={<CancelOutlinedIcon />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          void handleCancel(dto.reservationId);
-                        }}
-                        disabled={dto.reservationStatus.code === "cancelled"}
-                      >
-                        Anuluj
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {reservations.map((dto, index) => {
+                  const isCancelled =
+                    dto.reservationStatus.code === "cancelled";
+                  return (
+                    <TableRow
+                      title={
+                        isCancelled
+                          ? "Rezerwacja anulowana"
+                          : "Kliknij aby zobaczyć szczegóły"
+                      }
+                      key={dto.reservationId}
+                      hover={!isCancelled}
+                      onClick={() =>
+                        navigate(`/reservation/my/${dto.reservationId}`)
+                      }
+                      sx={{
+                        cursor: "pointer",
+                        "&:hover": {
+                          bgcolor: "rgba(107,16,32,0.03)",
+                        },
+                      }}
+                    >
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{formatDateTime(dto.createdAt)}</TableCell>
+                      <TableCell>{formatDateTime(dto.updatedAt)}</TableCell>
+                      <TableCell>
+                        od {dto.startDate} do {dto.endDate}
+                      </TableCell>
+                      <TableCell>{dto.daysQty}</TableCell>
+                      <TableCell>
+                        <Chip
+                          label={dto.reservationStatus.label}
+                          size="small"
+                          sx={{
+                            bgcolor: "rgba(107,16,32,0.08)",
+                            color: "#6b1020",
+                            fontWeight: 600,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>{dto.reservationSource.label}</TableCell>
+                      <TableCell>{dto.roomsQty}</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>
+                        {dto.totalPrice} zł
+                      </TableCell>
+                      <TableCell align="right">
+                        <Button
+                          color="error"
+                          startIcon={<CancelOutlinedIcon />}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            void handleCancel(dto.reservationId);
+                          }}
+                          disabled={isCancelled}
+                        >
+                          Anuluj
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>

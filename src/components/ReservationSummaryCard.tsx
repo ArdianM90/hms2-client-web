@@ -16,12 +16,14 @@ type Props = {
   offer: ReservationOffer;
   startDate: string;
   endDate: string;
+  comment: string;
 };
 
 export default function ReservationSummaryCard({
   offer,
   startDate,
   endDate,
+  comment,
 }: Props) {
   const navigate = useNavigate();
 
@@ -31,9 +33,10 @@ export default function ReservationSummaryCard({
       dateStart: startDate,
       dateEnd: endDate,
       totalPrice: offer.totalPrice,
+      comment: comment || null,
     };
     await reservationApi.makeReservation(request);
-    navigate("/reservation/success");
+    navigate("/reservation/my");
   };
 
   return (

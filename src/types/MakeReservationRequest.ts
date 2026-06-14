@@ -3,5 +3,5 @@ export type MakeReservationRequest = {
   dateStart: string;
   dateEnd: string;
   totalPrice: number;
-  comment?: string;
+  comment: string | null;
 };

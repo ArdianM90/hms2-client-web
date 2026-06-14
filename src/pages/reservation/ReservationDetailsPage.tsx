@@ -15,6 +15,7 @@ import { formatDateTime } from "../../helpers/Formatter.ts";
 import type { ReservationDetails } from "../../types/ReservationDetails.ts";
 import InfoBox from "../../components/InfoBox.tsx";
 import ReservationRoomCard from "../../components/ReservationRoomCard.tsx";
+import { InfoTextBox } from "../../components/InfoTextBox.tsx";
 
 export default function ReservationDetailsPage() {
   const { reservationId } = useParams();
@@ -79,11 +80,6 @@ export default function ReservationDetailsPage() {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Szczegóły pobytu
               </Typography>
-
-              <InfoBox
-                label="Numer rezerwacji"
-                value={reservation.reservationId}
-              />
               <InfoBox
                 label="Status"
                 value={reservation.reservationStatus.label}
@@ -104,9 +100,7 @@ export default function ReservationDetailsPage() {
                 label="Ostatnia aktualizacja"
                 value={formatDateTime(reservation.updatedAt)}
               />
-
               <Divider sx={{ my: 2 }} />
-
               <Typography
                 variant="h5"
                 sx={{
@@ -116,22 +110,14 @@ export default function ReservationDetailsPage() {
               >
                 {reservation.totalPrice} zł
               </Typography>
-
               <Typography variant="body2" color="text.secondary">
                 Cena całkowita
               </Typography>
-
               {reservation.comment && (
                 <>
                   <Divider sx={{ my: 2 }} />
 
-                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                    Komentarz
-                  </Typography>
-
-                  <Typography variant="body2" color="text.secondary">
-                    {reservation.comment}
-                  </Typography>
+                  <InfoTextBox label="Komentarz" value={reservation.comment} />
                 </>
               )}
             </CardContent>
@@ -142,7 +128,6 @@ export default function ReservationDetailsPage() {
           <Typography variant="h5" sx={{ mb: 2 }}>
             Zarezerwowane pokoje
           </Typography>
-
           <Stack spacing={2}>
             {reservation.rooms.map((room, index) => (
               <ReservationRoomCard
