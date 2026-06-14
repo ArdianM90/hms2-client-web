@@ -1,4 +1,4 @@
 export type RoomStandard = {
-    code: string;
-    name: string;
+  code: string;
+  name: string;
 };

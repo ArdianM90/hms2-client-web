@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import RegisterPage from "../pages/RegisterPage";
 import DashboardPage from "../pages/DashboardPage";
@@ -17,37 +17,49 @@ import BookReservationPage from "../pages/reservation/BookReservationPage.tsx";
 import ConfirmReservationPage from "../pages/reservation/ConfirmReservationPage.tsx";
 import ReservationLayout from "../layouts/ReservationLayout.tsx";
 import MyReservationsPage from "../pages/reservation/MyReservationsPage.tsx";
+import ReservationDetailsPage from "../pages/reservation/ReservationDetailsPage.tsx";
 
 export default function AppRouter() {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/register" element={<PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>} />
-                <Route path="/callback" element={<CallbackPage />} />
-                <Route element={<Layout />}>
-                    <Route path="/dashboard" element={<DashboardPage />} />
-                    <Route path="/logout" element={<LogoutPage />} />
-                </Route>
-                <Route element={<ProtectedRoute />}>
-                    <Route element={<Layout />}>
-                        <Route path="admin" element={<AdminLayout />}>
-                            <Route index element={<Navigate to="rooms" replace />}/>
-                            <Route path="rooms" element={<ManageRoomsPage />}/>
-                            <Route path="rooms/add" element={<RoomAddPage />}/>
-                            <Route path="rooms/:id" element={<RoomDetailsPage />} />
-                            <Route path="rooms/:id/edit" element={<RoomEditPage />} />
-                            <Route path="hotel" element={<ManageHotelPage />}/>
-                        </Route>
-                        <Route path="reservation" element={<ReservationLayout />}>
-                            <Route index element={<Navigate to="book" replace />}/>
-                            <Route path="book" element={<BookReservationPage />}/>
-                            <Route path="my" element={<MyReservationsPage />}/>
-                            <Route path="confirmation" element={<ConfirmReservationPage />}/>
-                        </Route>
-                    </Route>
-                </Route>
-            </Routes>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route
+          path="/register"
+          element={
+            <PublicOnlyRoute>
+              <RegisterPage />
+            </PublicOnlyRoute>
+          }
+        />
+        <Route path="/callback" element={<CallbackPage />} />
+        <Route element={<Layout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
+        </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="rooms" replace />} />
+              <Route path="rooms" element={<ManageRoomsPage />} />
+              <Route path="rooms/add" element={<RoomAddPage />} />
+              <Route path="rooms/:id" element={<RoomDetailsPage />} />
+              <Route path="rooms/:id/edit" element={<RoomEditPage />} />
+              <Route path="hotel" element={<ManageHotelPage />} />
+            </Route>
+            <Route path="reservation" element={<ReservationLayout />}>
+              <Route index element={<Navigate to="book" replace />} />
+              <Route path="book" element={<BookReservationPage />} />
+              <Route path="my" element={<MyReservationsPage />} />
+              <Route
+                path="my/:reservationId"
+                element={<ReservationDetailsPage />}
+              />
+              <Route path="confirmation" element={<ConfirmReservationPage />} />
+            </Route>
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }

@@ -1,9 +1,5 @@
-import {Container} from "@mui/material";
+import { Container } from "@mui/material";
 
 export default function RegisterPage() {
-    return (
-        <Container maxWidth="sm">
-            Rejestracja użytkownika
-        </Container>
-    );
+  return <Container maxWidth="sm">Rejestracja użytkownika</Container>;
 }

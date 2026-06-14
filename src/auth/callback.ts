@@ -1,5 +1,5 @@
 import { userManager } from "./oidcClient";
 
 export const handleCallback = async () => {
-    return await userManager.signinRedirectCallback();
+  return await userManager.signinRedirectCallback();
 };

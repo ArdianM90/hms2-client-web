@@ -1,7 +1,7 @@
 export type AxiosErrorResponse = {
-    response?: {
-        data?: {
-            message?: string;
-        };
+  response?: {
+    data?: {
+      message?: string;
     };
+  };
 };

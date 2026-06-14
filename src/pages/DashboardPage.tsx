@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { getUser } from "../auth/auth";
 
 export default function DashboardPage() {
-    const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-    useEffect(() => {
-        getUser().then(u => setUser(u));
-    }, []);
+  useEffect(() => {
+    getUser().then((u) => setUser(u));
+  }, []);
 
-    return <div>Witaj {user?.profile?.sub}!</div>;
+  return <div>Witaj {user?.profile?.sub}!</div>;
 }
