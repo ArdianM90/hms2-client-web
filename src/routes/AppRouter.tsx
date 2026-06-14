@@ -18,6 +18,7 @@ import ConfirmReservationPage from "../pages/reservation/ConfirmReservationPage.
 import ReservationLayout from "../layouts/ReservationLayout.tsx";
 import MyReservationsPage from "../pages/reservation/MyReservationsPage.tsx";
 import ReservationDetailsPage from "../pages/reservation/ReservationDetailsPage.tsx";
+import ManageReservationsPage from "../pages/reservation/ManageReservationsPage.tsx";
 
 export default function AppRouter() {
   return (
@@ -46,13 +47,14 @@ export default function AppRouter() {
               <Route path="rooms/:id" element={<RoomDetailsPage />} />
               <Route path="rooms/:id/edit" element={<RoomEditPage />} />
               <Route path="hotel" element={<ManageHotelPage />} />
+              <Route path="reservations" element={<ManageReservationsPage />} />
             </Route>
             <Route path="reservation" element={<ReservationLayout />}>
               <Route index element={<Navigate to="book" replace />} />
               <Route path="book" element={<BookReservationPage />} />
               <Route path="my" element={<MyReservationsPage />} />
               <Route
-                path="my/:reservationId"
+                path=":reservationId"
                 element={<ReservationDetailsPage />}
               />
               <Route path="confirmation" element={<ConfirmReservationPage />} />

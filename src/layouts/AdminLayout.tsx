@@ -1,5 +1,6 @@
 import RoomServiceOutlinedIcon from "@mui/icons-material/RoomServiceOutlined";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import EventNoteOutlinedIcon from '@mui/icons-material/EventNoteOutlined';
 import SidebarLayout from "./SidebarLayout.tsx";
 
 const items = [
@@ -12,6 +13,11 @@ const items = [
     label: "Zarządzanie pokojami",
     path: "/admin/rooms",
     icon: MeetingRoomIcon,
+  },
+  {
+    label: "Zarządzanie rezerwacjami",
+    path: "/admin/reservations",
+    icon: EventNoteOutlinedIcon,
   },
 ];
 
