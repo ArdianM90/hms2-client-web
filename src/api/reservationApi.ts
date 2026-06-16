@@ -28,8 +28,6 @@ export const reservationApi = {
   makeReservation: (request: MakeReservationRequest) =>
     api.post("/api/hms/reservations", request),
 
-  changeReservationStatus: (reservationId: number) =>
-    api.patch(`/api/hms/reservations/${reservationId}/status`, {
-      statusCode: "cancelled",
-    }),
+  changeReservationStatus: (reservationId: number, statusCode: string) =>
+    api.patch(`/api/hms/reservations/${reservationId}/status`, { statusCode }),
 };

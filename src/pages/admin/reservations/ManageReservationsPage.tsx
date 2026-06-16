@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import type { ReservationColumn } from "../../types/ReservationColumn.ts";
-import { commonColumns } from "../../config/reservationColumns.tsx";
+import type { ReservationColumn } from "../../../types/ReservationColumn.ts";
+import { commonColumns } from "../../../config/reservationColumns.tsx";
 import {
   Alert,
   Box,
@@ -10,10 +10,14 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { reservationApi } from "../../api/reservationApi.ts";
-import ReservationsTable from "../../components/ReservationsTable.tsx";
-import ManageReservationActions from "../../components/ManageReservationActions.tsx";
-import type { AdminReservationInfo } from "../../types/AdminReservationInfo.ts";
+import { reservationApi } from "../../../api/reservationApi.ts";
+import ReservationsTable from "../../../components/ReservationsTable.tsx";
+import ManageReservationActions from "../../../components/ManageReservationActions.tsx";
+import type { AdminReservationInfo } from "../../../types/AdminReservationInfo.ts";
+import {
+  getStatusLabel,
+  type ReservationStatusCode,
+} from "../../../constants/reservationStatus.ts";
 
 export default function ManageReservationsPage() {
   const navigate = useNavigate();
@@ -21,7 +25,29 @@ export default function ManageReservationsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const handleStatusChange = (): void => {};
+  const handleStatusChange = async (
+    reservationId: number,
+    statusCode: ReservationStatusCode,
+  ): Promise<void> => {
+    try {
+      await reservationApi.changeReservationStatus(reservationId, statusCode);
+      setReservations((prev) =>
+        prev.map((r) =>
+          r.reservationId === reservationId
+            ? {
+                ...r,
+                reservationStatus: {
+                  code: statusCode,
+                  label: getStatusLabel(statusCode),
+                },
+              }
+            : r,
+        ),
+      );
+    } catch {
+      alert("Nie udało się zmienić statusu rezerwacji");
+    }
+  };
 
   const guestColumn: ReservationColumn<AdminReservationInfo> = {
     header: "Gość",
@@ -30,7 +56,7 @@ export default function ManageReservationsPage() {
 
   const adminActionsColumn: ReservationColumn<AdminReservationInfo> = {
     header: "Akcje",
-    align: "right",
+    align: "center",
     render: (dto) => (
       <ManageReservationActions dto={dto} onStatusChange={handleStatusChange} />
     ),

@@ -1,9 +1,10 @@
-import type { ReservationInfo } from "../types/ReservationInfo.ts";
 import { Button } from "@mui/material";
+import type { AdminReservationInfo } from "../types/AdminReservationInfo.ts";
+import { ReservationStatusCode } from "../constants/reservationStatus.ts";
 
 type Props = {
-  dto: ReservationInfo;
-  onStatusChange: (id: number, status: string) => void;
+  dto: AdminReservationInfo;
+  onStatusChange: (reservationId: number, code: ReservationStatusCode) => void;
 };
 
 export default function ManageReservationActions({
@@ -12,26 +13,43 @@ export default function ManageReservationActions({
 }: Props) {
   const { code } = dto.reservationStatus;
 
-  if (code === "created") {
+  if (code === ReservationStatusCode.CREATED) {
     return (
-      <Button onClick={() => onStatusChange(dto.reservationId, "confirmed")}>
+      <Button
+        variant="contained"
+        sx={{ bgcolor: "#6b1020" }}
+        onClick={() =>
+          onStatusChange(dto.reservationId, ReservationStatusCode.CONFIRMED)
+        }
+      >
         Potwierdź
       </Button>
     );
   }
-  if (code === "confirmed") {
+  if (code === ReservationStatusCode.CONFIRMED) {
     return (
-      <Button onClick={() => onStatusChange(dto.reservationId, "checked_in")}>
+      <Button
+        variant="contained"
+        sx={{ bgcolor: "#6b1020" }}
+        onClick={() =>
+          onStatusChange(dto.reservationId, ReservationStatusCode.CHECKED_IN)
+        }
+      >
         Zamelduj
       </Button>
     );
   }
-  if (code === "checked_in") {
+  if (code === ReservationStatusCode.CHECKED_IN) {
     return (
-      <Button onClick={() => onStatusChange(dto.reservationId, "checked_out")}>
+      <Button
+        variant="contained"
+        sx={{ bgcolor: "#6b1020" }}
+        onClick={() =>
+          onStatusChange(dto.reservationId, ReservationStatusCode.CHECKED_OUT)
+        }
+      >
         Wymelduj
       </Button>
     );
   }
-  return null;
 }

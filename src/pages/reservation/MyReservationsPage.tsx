@@ -15,6 +15,10 @@ import type { ReservationColumn } from "../../types/ReservationColumn.ts";
 import { commonColumns } from "../../config/reservationColumns.tsx";
 import ReservationsTable from "../../components/ReservationsTable.tsx";
 import { useNavigate } from "react-router-dom";
+import {
+  getStatusLabel,
+  ReservationStatusCode,
+} from "../../constants/reservationStatus.ts";
 
 export default function MyReservationsPage() {
   const navigate = useNavigate();
@@ -26,7 +30,7 @@ export default function MyReservationsPage() {
     ...commonColumns,
     {
       header: "Akcje",
-      align: "right",
+      align: "center",
       render: (dto) => (
         <Button
           color="error"
@@ -51,16 +55,22 @@ export default function MyReservationsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleCancel = async (id: number) => {
+  const handleCancel = async (reservationId: number) => {
     try {
-      await reservationApi.changeReservationStatus(id);
+      await reservationApi.changeReservationStatus(
+        reservationId,
+        ReservationStatusCode.CANCELLED,
+      );
 
       setReservations((prev) =>
         prev.map((r) =>
-          r.reservationId === id
+          r.reservationId === reservationId
             ? {
                 ...r,
-                reservationStatus: { code: "cancelled", label: "Anulowana" },
+                reservationStatus: {
+                  code: ReservationStatusCode.CANCELLED,
+                  label: getStatusLabel(ReservationStatusCode.CANCELLED),
+                },
               }
             : r,
         ),

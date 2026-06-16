@@ -18,7 +18,7 @@ import ConfirmReservationPage from "../pages/reservation/ConfirmReservationPage.
 import ReservationLayout from "../layouts/ReservationLayout.tsx";
 import MyReservationsPage from "../pages/reservation/MyReservationsPage.tsx";
 import ReservationDetailsPage from "../pages/reservation/ReservationDetailsPage.tsx";
-import ManageReservationsPage from "../pages/reservation/ManageReservationsPage.tsx";
+import ManageReservationsPage from "../pages/admin/reservations/ManageReservationsPage.tsx";
 
 export default function AppRouter() {
   return (
