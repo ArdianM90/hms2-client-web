@@ -1,5 +1,8 @@
 import type { RoomOffer } from "./ReservationOffer.ts";
-import type { EnumValue } from "./EnumValue.ts";
+import type {
+  ReservationSourceValue,
+  ReservationStatusValue,
+} from "./EnumValue.ts";
 
 export type ReservationDetails = {
   reservationId: number;
@@ -8,8 +11,8 @@ export type ReservationDetails = {
   startDate: string;
   endDate: string;
   totalPrice: number;
-  reservationStatus: EnumValue;
-  reservationSource: EnumValue;
+  reservationStatus: ReservationStatusValue;
+  reservationSource: ReservationSourceValue;
   rooms: RoomOffer[];
   comment: string | null;
 };
