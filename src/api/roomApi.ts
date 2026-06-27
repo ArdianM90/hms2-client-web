@@ -1,5 +1,4 @@
 import { api } from "./axios";
-import type { RoomStandard } from "../types/RoomStandard";
 import type { RoomCreateRequest } from "../types/RoomCreateRequest.ts";
 import type { Room } from "../types/Room.ts";
 import type { RoomUpdateRequest } from "../types/RoomUpdateRequest.ts";
@@ -17,7 +16,4 @@ export const roomApi = {
     api.put(`/api/hms/rooms/${roomId}`, request),
 
   deleteRoom: (roomId: number) => api.delete(`/api/hms/rooms/${roomId}`),
-
-  getStandards: () =>
-    api.get<RoomStandard[]>("/api/hms/rooms/standards").then((res) => res.data),
 };

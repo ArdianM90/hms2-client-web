@@ -10,9 +10,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import type { RoomStandard } from "../types/RoomStandard.ts";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import type { DictionaryValue } from "../types/DictionaryValue.ts";
 
 type RoomRequirement = {
   id: number;
@@ -30,7 +30,7 @@ export type ReservationFilter = {
 
 type Props = {
   filter: ReservationFilter;
-  standards: RoomStandard[];
+  standards: DictionaryValue[];
   onFilterChange: (filter: ReservationFilter) => void;
   onAddRoom: () => void;
   onRemoveRoom: (roomId: number) => void;

@@ -1,8 +1,8 @@
-import type { RoomStandard } from "./RoomStandard";
+import type { DictionaryValue } from "./DictionaryValue.ts";
 
 export type RoomOffer = {
   roomId: number;
-  standard: RoomStandard;
+  standard: DictionaryValue;
   capacity: number;
   pricePerNight: number;
 };

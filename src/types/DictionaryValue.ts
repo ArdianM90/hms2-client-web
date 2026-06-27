@@ -1,4 +1,4 @@
-export type RoomStandard = {
+export type DictionaryValue = {
   code: string;
   name: string;
 };

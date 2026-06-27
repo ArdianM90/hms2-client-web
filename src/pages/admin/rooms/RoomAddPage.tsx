@@ -1,11 +1,12 @@
 import { Box, Typography, Button, Stack, Alert } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { RoomStandard } from "../../../types/RoomStandard.ts";
 import type { RoomCreateRequest } from "../../../types/RoomCreateRequest.ts";
 import { roomApi } from "../../../api/roomApi.ts";
 import RoomForm, { type RoomFormState } from "../../../components/RoomForm";
 import type { AxiosErrorResponse } from "../../../api/apiTypes.ts";
+import type { DictionaryValue } from "../../../types/DictionaryValue.ts";
+import { dictionaryApi, DictionaryType } from "../../../api/dictionaryApi.ts";
 
 const emptyForm: RoomFormState = {
   roomNumber: "",
@@ -21,11 +22,11 @@ export default function RoomAddPage() {
   const [form, setForm] = useState<RoomFormState>(emptyForm);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [standards, setStandards] = useState<RoomStandard[]>([]);
+  const [standards, setStandards] = useState<DictionaryValue[]>([]);
 
   useEffect(() => {
-    roomApi
-      .getStandards()
+    dictionaryApi
+      .getDictionary(DictionaryType.ROOM_STANDARDS)
       .then(setStandards)
       .catch(() => setError("Nie udało się pobrać standardów pokoi."));
   }, []);

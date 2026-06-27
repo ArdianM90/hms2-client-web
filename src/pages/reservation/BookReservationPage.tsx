@@ -1,8 +1,6 @@
 import { Alert, Box, Stack, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import type { RoomStandard } from "../../types/RoomStandard";
 import ReservationSearchForm from "../../components/ReservationSearchForm.tsx";
-import { roomApi } from "../../api/roomApi.ts";
 import { reservationApi } from "../../api/reservationApi.ts";
 import type { ReservationFilter } from "../../types/ReservationFilter.ts";
 import type { SearchReservationOffersRequest } from "../../types/SearchReservationOffersRequest.ts";
@@ -10,10 +8,12 @@ import type { ReservationOffer } from "../../types/ReservationOffer.ts";
 import ReservationOfferCard from "../../components/ReservationOfferCard.tsx";
 import type { AxiosErrorResponse } from "../../api/apiTypes.ts";
 import { useNavigate } from "react-router-dom";
+import type { DictionaryValue } from "../../types/DictionaryValue.ts";
+import { dictionaryApi, DictionaryType } from "../../api/dictionaryApi.ts";
 
 export default function BookReservationPage() {
   const navigate = useNavigate();
-  const [standards, setStandards] = useState<RoomStandard[]>([]);
+  const [standards, setStandards] = useState<DictionaryValue[]>([]);
   const [offers, setOffers] = useState<ReservationOffer[]>([]);
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -41,7 +41,9 @@ export default function BookReservationPage() {
   );
 
   useEffect(() => {
-    roomApi.getStandards().then(setStandards);
+    dictionaryApi
+      .getDictionary(DictionaryType.ROOM_STANDARDS)
+      .then(setStandards);
   }, []);
 
   const mapFilterToRequest = (

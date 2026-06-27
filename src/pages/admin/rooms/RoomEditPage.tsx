@@ -8,15 +8,16 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { RoomStandard } from "../../../types/RoomStandard.ts";
 import { roomApi } from "../../../api/roomApi.ts";
 import RoomForm, { type RoomFormState } from "../../../components/RoomForm.tsx";
+import type { DictionaryValue } from "../../../types/DictionaryValue.ts";
+import { dictionaryApi, DictionaryType } from "../../../api/dictionaryApi.ts";
 
 export default function RoomEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [standards, setStandards] = useState<RoomStandard[]>([]);
+  const [standards, setStandards] = useState<DictionaryValue[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +32,10 @@ export default function RoomEditPage() {
   });
 
   useEffect(() => {
-    Promise.all([roomApi.getRoom(Number(id)), roomApi.getStandards()])
+    Promise.all([
+      roomApi.getRoom(Number(id)),
+      dictionaryApi.getDictionary(DictionaryType.ROOM_STANDARDS),
+    ])
       .then(([room, standards]) => {
         setStandards(standards);
         setForm({
