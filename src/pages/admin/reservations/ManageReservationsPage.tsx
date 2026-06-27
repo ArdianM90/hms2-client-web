@@ -63,7 +63,7 @@ export default function ManageReservationsPage() {
   };
 
   const columns: ReservationColumn<AdminReservationInfo>[] = [
-    commonColumns[0], // #
+    commonColumns[0],
     guestColumn,
     ...commonColumns.slice(1),
     adminActionsColumn,

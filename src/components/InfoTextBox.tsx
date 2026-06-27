@@ -19,7 +19,7 @@ export function InfoTextBox({
           borderRadius: 1,
           bgcolor: "rgba(0,0,0,0.03)",
           border: "1px solid rgba(0,0,0,0.08)",
-          whiteSpace: "pre-wrap", // 👈 ważne (zachowuje nowe linie)
+          whiteSpace: "pre-wrap",
           wordBreak: "break-word",
         }}
       >

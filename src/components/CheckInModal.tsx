@@ -1,4 +1,3 @@
-// components/CheckInModal.tsx
 import { useEffect, useState } from "react";
 import {
   Alert,
