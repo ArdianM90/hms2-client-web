@@ -24,7 +24,7 @@ import type {
 } from "../types/CheckInRequest";
 import type { DictionaryValue } from "../types/DictionaryValue";
 import type { AxiosErrorResponse } from "../api/apiTypes";
-import {guestsApi} from "../api/guestsApi.ts";
+import { guestsApi } from "../api/guestsApi.ts";
 
 const emptyGuest: GuestCheckInRequest = {
   firstName: "",
@@ -84,10 +84,10 @@ export default function CheckInModal({
         setDocumentTypes(docTypes);
         setCitizenshipTypes(citizenships);
         setRooms(
-            details.rooms.map((r) => ({
-              roomId: r.roomId,
-              guests: [{ ...emptyGuest }],
-            }))
+          details.rooms.map((r) => ({
+            roomId: r.roomId,
+            guests: [{ ...emptyGuest }],
+          })),
         );
       } catch {
         if (active) setError("Nie udało się pobrać danych rezerwacji.");
@@ -136,7 +136,7 @@ export default function CheckInModal({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth="lg"
       fullWidth
       onClick={(e) => e.stopPropagation()}
     >

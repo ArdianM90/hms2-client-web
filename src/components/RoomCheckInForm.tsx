@@ -58,7 +58,15 @@ export default function RoomCheckInForm({
   const isFull = room.guests.length >= capacity;
 
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box
+      sx={{
+        border: "0.5px solid rgba(0,0,0,0.12)",
+        borderRadius: 2,
+        p: 2,
+        mb: 3,
+        bgcolor: "rgba(107,16,32,0.02)",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
