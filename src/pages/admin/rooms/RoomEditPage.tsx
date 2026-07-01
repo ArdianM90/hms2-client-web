@@ -34,7 +34,7 @@ export default function RoomEditPage() {
   useEffect(() => {
     Promise.all([
       roomApi.getRoom(Number(id)),
-      dictionaryApi.getDictionary(DictionaryType.ROOM_STANDARDS),
+      dictionaryApi.getDictionary(DictionaryType.ROOM_STANDARD),
     ])
       .then(([room, standards]) => {
         setStandards(standards);

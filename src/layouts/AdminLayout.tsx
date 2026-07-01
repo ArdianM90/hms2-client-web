@@ -1,3 +1,4 @@
+import GroupsIcon from "@mui/icons-material/Groups";
 import RoomServiceOutlinedIcon from "@mui/icons-material/RoomServiceOutlined";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
@@ -5,17 +6,22 @@ import SidebarLayout from "./SidebarLayout.tsx";
 
 const items = [
   {
-    label: "Zarządzanie hotelem",
+    label: "Użytkownicy HMS",
+    path: "/admin/users",
+    icon: GroupsIcon,
+  },
+  {
+    label: "Hotel",
     path: "/admin/hotel",
     icon: RoomServiceOutlinedIcon,
   },
   {
-    label: "Zarządzanie pokojami",
+    label: "Pokoje",
     path: "/admin/rooms",
     icon: MeetingRoomIcon,
   },
   {
-    label: "Zarządzanie rezerwacjami",
+    label: "Rezerwacje",
     path: "/admin/reservations",
     icon: EventNoteOutlinedIcon,
   },

@@ -42,7 +42,7 @@ export default function BookReservationPage() {
 
   useEffect(() => {
     dictionaryApi
-      .getDictionary(DictionaryType.ROOM_STANDARDS)
+      .getDictionary(DictionaryType.ROOM_STANDARD)
       .then(setStandards);
   }, []);
 

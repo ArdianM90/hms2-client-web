@@ -19,6 +19,7 @@ import ReservationLayout from "../layouts/ReservationLayout.tsx";
 import MyReservationsPage from "../pages/reservation/MyReservationsPage.tsx";
 import ReservationDetailsPage from "../pages/reservation/ReservationDetailsPage.tsx";
 import ManageReservationsPage from "../pages/admin/reservations/ManageReservationsPage.tsx";
+import ManageUsersPage from "../pages/ManageUsersPage.tsx";
 
 export default function AppRouter() {
   return (
@@ -48,6 +49,7 @@ export default function AppRouter() {
               <Route path="rooms/:id/edit" element={<RoomEditPage />} />
               <Route path="hotel" element={<ManageHotelPage />} />
               <Route path="reservations" element={<ManageReservationsPage />} />
+              <Route path="users" element={<ManageUsersPage />} />
             </Route>
             <Route path="reservation" element={<ReservationLayout />}>
               <Route index element={<Navigate to="book" replace />} />

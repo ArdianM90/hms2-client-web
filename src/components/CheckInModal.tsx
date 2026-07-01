@@ -74,7 +74,7 @@ export default function CheckInModal({
       try {
         const [details, docTypes, citizenships] = await Promise.all([
           reservationApi.getReservation(reservationId),
-          dictionaryApi.getDictionary(DictionaryType.DOCUMENT_TYPES),
+          dictionaryApi.getDictionary(DictionaryType.DOCUMENT_TYPE),
           dictionaryApi.getDictionary(DictionaryType.CITIZENSHIP),
         ]);
 

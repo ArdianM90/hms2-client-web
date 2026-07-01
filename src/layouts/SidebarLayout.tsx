@@ -45,7 +45,7 @@ export default function SidebarLayout({ title, items }: Props) {
           sx={{
             "& .MuiTab-root": {
               width: "100%",
-              alignItems: "flex-start",
+              justifyContent: "flex-start",
               textAlign: "left",
               px: 2,
               py: 1.5,
@@ -53,6 +53,10 @@ export default function SidebarLayout({ title, items }: Props) {
               textTransform: "none",
               fontSize: "0.9rem",
               color: "text.secondary",
+            },
+            "& .MuiTab-iconWrapper": {
+              marginRight: 14,
+              fontSize: "1.4rem",
             },
             "& .Mui-selected": {
               color: "#6b1020",
@@ -71,7 +75,7 @@ export default function SidebarLayout({ title, items }: Props) {
           {items.map(({ label, path, icon: Icon }) => (
             <Tab
               key={path}
-              icon={<Icon fontSize="small" />}
+              icon={<Icon />}
               iconPosition="start"
               label={label}
               value={path}

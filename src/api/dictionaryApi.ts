@@ -2,9 +2,11 @@ import { api } from "./axios";
 import type { DictionaryValue } from "../types/DictionaryValue";
 
 export const DictionaryType = {
-  ROOM_STANDARDS: "room_standards",
-  DOCUMENT_TYPES: "document_types",
+  ROOM_STANDARD: "room_standard",
+  DOCUMENT_TYPE: "document_type",
   CITIZENSHIP: "citizenship",
+  APP_USER_ROLE: "app_user_role",
+  EMPLOYEE_POSITION: "employee_position",
 } as const;
 
 export type DictionaryType =

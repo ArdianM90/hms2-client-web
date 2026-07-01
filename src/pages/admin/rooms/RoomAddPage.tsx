@@ -26,7 +26,7 @@ export default function RoomAddPage() {
 
   useEffect(() => {
     dictionaryApi
-      .getDictionary(DictionaryType.ROOM_STANDARDS)
+      .getDictionary(DictionaryType.ROOM_STANDARD)
       .then(setStandards)
       .catch(() => setError("Nie udało się pobrać standardów pokoi."));
   }, []);
