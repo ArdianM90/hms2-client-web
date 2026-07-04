@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -51,14 +51,6 @@ export default function TaskFormModal({
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (open) {
-      setForm(emptyForm);
-      setError(null);
-      console.log("createdByUserId:", createdByUserId);
-    }
-  }, [open]);
 
   const isValid = form.title.trim() !== "" && createdByUserId !== null;
 

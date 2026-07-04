@@ -25,8 +25,6 @@ import TaskFormModal from "../../../components/TaskFormModal.tsx";
 import type { DictionaryValue } from "../../../types/DictionaryValue.ts";
 import { dictionaryApi, DictionaryType } from "../../../api/dictionaryApi.ts";
 
-// Jeśli nawigujesz tu z ManageUsersPage przez state (patrz diff niżej),
-// imię/nazwisko przyjdzie z location.state — bez dodatkowego fetcha pracownika.
 type LocationState = { assigneeName?: string } | null;
 
 export default function ManageEmployeeTasksPage() {
@@ -47,19 +45,20 @@ export default function ManageEmployeeTasksPage() {
 
   const loadTasks = () => {
     if (!userId) return Promise.resolve();
-    setLoading(true);
-    setError(null);
-    return taskApi
-      .getTasks({ userId })
-      .then(setTasks)
-      .catch(() => setError("Nie udało się pobrać listy zadań"))
-      .finally(() => setLoading(false));
+    return Promise.resolve()
+        .then(() => {
+          setLoading(true);
+          setError(null);
+        })
+        .then(() => taskApi.getTasks({ userId }))
+        .then(setTasks)
+        .catch(() => setError("Nie udało się pobrać listy zadań"))
+        .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     dictionaryApi.getDictionary(DictionaryType.TASK_STATUS).then(setStatuses);
     void loadTasks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const statusColor = (status: TaskStatus) => {
@@ -171,6 +170,7 @@ export default function ManageEmployeeTasksPage() {
       </Card>
 
       <TaskFormModal
+        key={modalOpen ? "open" : "closed"}
         open={modalOpen}
         assigneeUserId={userId}
         assigneeName={assigneeName}
