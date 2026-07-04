@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import type { ReservationColumn } from "../../../types/ReservationColumn.ts";
-import { commonColumns } from "../../../config/reservationColumns.tsx";
+import type { TableColumn } from "../../../types/TableColumn.ts";
+import { commonReservationColumns } from "../../../config/CommonTableColumns.tsx";
 import {
   Alert,
   Box,
@@ -49,12 +49,12 @@ export default function ManageReservationsPage() {
     }
   };
 
-  const guestColumn: ReservationColumn<AdminReservationInfo> = {
+  const guestColumn: TableColumn<AdminReservationInfo> = {
     header: "Gość",
     render: (dto) => `${dto.guestFirstName} ${dto.guestLastName}`,
   };
 
-  const adminActionsColumn: ReservationColumn<AdminReservationInfo> = {
+  const adminActionsColumn: TableColumn<AdminReservationInfo> = {
     header: "Akcje",
     align: "center",
     render: (dto) => (
@@ -62,10 +62,10 @@ export default function ManageReservationsPage() {
     ),
   };
 
-  const columns: ReservationColumn<AdminReservationInfo>[] = [
-    commonColumns[0],
+  const columns: TableColumn<AdminReservationInfo>[] = [
+    commonReservationColumns[0],
     guestColumn,
-    ...commonColumns.slice(1),
+    ...commonReservationColumns.slice(1),
     adminActionsColumn,
   ];
 

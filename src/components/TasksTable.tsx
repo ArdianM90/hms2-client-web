@@ -1,21 +1,21 @@
 import {
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
+  Table,
   TableHead,
+  TableBody,
   TableRow,
+  TableCell,
 } from "@mui/material";
 import type { TableColumn } from "../types/TableColumn.ts";
 
 type Props<T> = {
-  reservations: T[];
+  tasks: T[];
   columns: TableColumn<T>[];
   onRowClick?: (dto: T) => void;
 };
 
-export default function ReservationsTable<T extends { reservationId: number }>({
-  reservations,
+export default function TasksTable<T extends { employeeTaskId: number }>({
+  tasks,
   columns,
   onRowClick,
 }: Props<T>) {
@@ -36,10 +36,9 @@ export default function ReservationsTable<T extends { reservationId: number }>({
           </TableRow>
         </TableHead>
         <TableBody>
-          {reservations.map((dto, index) => (
+          {tasks.map((dto, index) => (
             <TableRow
-              title={"Kliknij aby zobaczyć szczegóły"}
-              key={dto.reservationId}
+              key={dto.employeeTaskId}
               hover={!!onRowClick}
               onClick={() => onRowClick?.(dto)}
               sx={

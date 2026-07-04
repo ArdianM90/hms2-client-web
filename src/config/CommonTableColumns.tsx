@@ -1,9 +1,10 @@
 import { formatDateTime } from "../helpers/Formatter.ts";
 import { Chip } from "@mui/material";
-import type { ReservationColumn } from "../types/ReservationColumn.ts";
+import type { TableColumn } from "../types/TableColumn.ts";
 import type { ReservationInfo } from "../types/ReservationInfo.ts";
+import type { MyTaskListItem } from "../types/Task.ts";
 
-export const commonColumns: ReservationColumn<ReservationInfo>[] = [
+export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
   {
     header: "#",
     render: (_, index) => index + 1,
@@ -49,5 +50,25 @@ export const commonColumns: ReservationColumn<ReservationInfo>[] = [
   {
     header: "Cena",
     render: (dto) => `${dto.totalPrice} zł`,
+  },
+];
+
+export const commonTaskColumns: TableColumn<MyTaskListItem>[] = [
+  {
+    header: "Tytuł",
+    render: (dto) => dto.title,
+  },
+  {
+    header: "Pokój",
+    render: (dto) => dto.roomNumber ?? "—",
+  },
+  {
+    header: "Priorytet",
+    render: (dto) => dto.priority,
+  },
+  {
+    header: "Termin",
+    render: (dto) =>
+      dto.dueAt ? new Date(dto.dueAt).toLocaleString("pl-PL") : "—",
   },
 ];

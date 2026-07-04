@@ -46,14 +46,14 @@ export default function ManageEmployeeTasksPage() {
   const loadTasks = () => {
     if (!userId) return Promise.resolve();
     return Promise.resolve()
-        .then(() => {
-          setLoading(true);
-          setError(null);
-        })
-        .then(() => taskApi.getTasks({ userId }))
-        .then(setTasks)
-        .catch(() => setError("Nie udało się pobrać listy zadań"))
-        .finally(() => setLoading(false));
+      .then(() => {
+        setLoading(true);
+        setError(null);
+      })
+      .then(() => taskApi.getTasks({ userId }))
+      .then(setTasks)
+      .catch(() => setError("Nie udało się pobrać listy zadań"))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {

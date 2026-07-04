@@ -11,8 +11,8 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { useEffect, useState } from "react";
 import { reservationApi } from "../../api/reservationApi.ts";
 import type { ReservationInfo } from "../../types/ReservationInfo.ts";
-import type { ReservationColumn } from "../../types/ReservationColumn.ts";
-import { commonColumns } from "../../config/reservationColumns.tsx";
+import type { TableColumn } from "../../types/TableColumn.ts";
+import { commonReservationColumns } from "../../config/CommonTableColumns.tsx";
 import ReservationsTable from "../../components/ReservationsTable.tsx";
 import { useNavigate } from "react-router-dom";
 import {
@@ -26,8 +26,8 @@ export default function MyReservationsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const columns: ReservationColumn<ReservationInfo>[] = [
-    ...commonColumns,
+  const columns: TableColumn<ReservationInfo>[] = [
+    ...commonReservationColumns,
     {
       header: "Akcje",
       align: "center",

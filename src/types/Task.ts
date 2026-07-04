@@ -34,6 +34,26 @@ export interface TaskListItem {
   completedAt: string | null;
 }
 
+export interface MyTaskListItem {
+  employeeTaskId: number;
+  createdByUserId: string;
+  createdByFirstName: string;
+  createdByLastName: string;
+  roomNumber: string | null;
+  reservationId: number | null;
+  taskTypeCode: string;
+  taskType: string;
+  statusCode: string;
+  status: string;
+  title: string;
+  description: string | null;
+  priority: number;
+  dueAt: string | null;
+  createdAt: string;
+  startedAt: string | null;
+  completedAt: string | null;
+}
+
 export interface AddTaskRequest {
   assigneeUserId: string;
   createdByUserId: string;
@@ -44,6 +64,11 @@ export interface AddTaskRequest {
   description?: string | null;
   priority?: number;
   dueAt?: string | null;
+}
+
+export interface UpdateStatusRequest {
+  statusCode: TaskStatus;
+  completedAt?: string | null;
 }
 
 export interface TasksFilterParams {

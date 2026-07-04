@@ -21,6 +21,7 @@ import ReservationDetailsPage from "../pages/reservation/ReservationDetailsPage.
 import ManageReservationsPage from "../pages/admin/reservations/ManageReservationsPage.tsx";
 import ManageUsersPage from "../pages/admin/users/ManageUsersPage.tsx";
 import ManageEmployeeTasksPage from "../pages/admin/users/ManageEmployeeTasksPage.tsx";
+import MyTasksPage from "../pages/task/MyTasksPage.tsx";
 
 export default function AppRouter() {
   return (
@@ -66,6 +67,7 @@ export default function AppRouter() {
               />
               <Route path="confirmation" element={<ConfirmReservationPage />} />
             </Route>
+            <Route path="my-tasks" element={<MyTasksPage />} />
           </Route>
         </Route>
       </Routes>
