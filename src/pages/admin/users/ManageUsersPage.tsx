@@ -15,17 +15,21 @@ import {
   Button,
   CircularProgress,
   Alert,
+  Tooltip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import { employeeApi } from "../api/employeeApi";
-import { dictionaryApi, DictionaryType } from "../api/dictionaryApi";
-import EmployeeFormModal from "../components/EmployeeFormModal";
-import type { EmployeeListItem } from "../types/Employee.ts";
-import type { DictionaryValue } from "../types/DictionaryValue.ts";
+import { employeeApi } from "../../../api/employeeApi.ts";
+import { dictionaryApi, DictionaryType } from "../../../api/dictionaryApi.ts";
+import EmployeeFormModal from "../../../components/EmployeeFormModal.tsx";
+import type { EmployeeListItem } from "../../../types/Employee.ts";
+import type { DictionaryValue } from "../../../types/DictionaryValue.ts";
+import { useNavigate } from "react-router-dom";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 export default function ManageUsersPage() {
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState<EmployeeListItem[]>([]);
   const [roles, setRoles] = useState<DictionaryValue[]>([]);
   const [positions, setPositions] = useState<DictionaryValue[]>([]);
@@ -155,28 +159,58 @@ export default function ManageUsersPage() {
                             key={code}
                             label={positionLabel(code)}
                             size="small"
+                            sx={{
+                              bgcolor: "rgba(107,16,32,0.08)",
+                              color: "#6b1020",
+                              fontWeight: 500,
+                              height: 20,
+                              fontSize: "0.7rem",
+                              mt: 0.5,
+                            }}
                           />
                         ))}
                       </Box>
                     </TableCell>
                     <TableCell align="center">
-                      <IconButton
-                        size="small"
-                        onClick={() => handleEditClick(employee)}
-                        title="Edytuj"
-                      >
-                        <EditIcon fontSize="small" sx={{ color: "#6b1020" }} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => handleDeleteClick(employee)}
-                        title="Usuń"
-                      >
-                        <DeleteIcon
-                          fontSize="small"
-                          sx={{ color: "#6b1020" }}
-                        />
-                      </IconButton>
+                      <Tooltip title="Edytuj pracownika">
+                        <IconButton
+                          size="medium"
+                          onClick={() => handleEditClick(employee)}
+                        >
+                          <EditIcon
+                            fontSize="medium"
+                            sx={{ color: "#6b1020" }}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Zobacz przydzielone zadania">
+                        <IconButton
+                          size="medium"
+                          onClick={() =>
+                            navigate(`/admin/users/${employee.userId}/tasks`, {
+                              state: {
+                                assigneeName: `${employee.firstName} ${employee.lastName}`,
+                              },
+                            })
+                          }
+                        >
+                          <AssignmentIcon
+                            fontSize="medium"
+                            sx={{ color: "#6b1020" }}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Usuń pracownika">
+                        <IconButton
+                          size="medium"
+                          onClick={() => handleDeleteClick(employee)}
+                        >
+                          <DeleteIcon
+                            fontSize="medium"
+                            sx={{ color: "#6b1020" }}
+                          />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

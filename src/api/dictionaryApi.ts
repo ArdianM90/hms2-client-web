@@ -7,6 +7,8 @@ export const DictionaryType = {
   CITIZENSHIP: "citizenship",
   APP_USER_ROLE: "app_user_role",
   EMPLOYEE_POSITION: "employee_position",
+  EMPLOYEE_TASK: "employee_task",
+  TASK_STATUS: "task_status",
 } as const;
 
 export type DictionaryType =
