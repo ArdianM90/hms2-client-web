@@ -124,24 +124,24 @@ export default function ManageEmployeeTasksPage() {
                   }}
                 >
                   <TableCell>Tytuł</TableCell>
-                  <TableCell>Pokój</TableCell>
-                  <TableCell>Priorytet</TableCell>
-                  <TableCell>Termin</TableCell>
-                  <TableCell>Status</TableCell>
+                  <TableCell align="center">Pokój</TableCell>
+                  <TableCell align="center">Priorytet</TableCell>
+                  <TableCell align="center">Termin</TableCell>
+                  <TableCell align="center">Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {tasks.map((task) => (
                   <TableRow key={task.employeeTaskId}>
                     <TableCell>{task.title}</TableCell>
-                    <TableCell>{task.roomId ?? "—"}</TableCell>
-                    <TableCell>{task.priority}</TableCell>
-                    <TableCell>
+                    <TableCell align="center">{task.roomNumber ? `nr ${task.roomNumber}` : "—"}</TableCell>
+                    <TableCell align="center">{task.priority}</TableCell>
+                    <TableCell align="center">
                       {task.dueAt
                         ? new Date(task.dueAt).toLocaleString("pl-PL")
                         : "—"}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                       <Chip
                         label={statusLabel(task.statusCode)}
                         color={statusColor(task.statusCode as TaskStatus)}

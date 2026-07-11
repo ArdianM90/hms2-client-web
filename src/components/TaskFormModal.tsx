@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -19,6 +19,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { taskApi } from "../api/taskApi";
 import { useCurrentUserId } from "../hooks/useCurrentUserId";
 import { type AddTaskRequest, TaskType } from "../types/Task.ts";
+import type { RoomSimple } from "../types/Room.ts";
+import { roomApi } from "../api/roomApi.ts";
 
 type AxiosErrorResponse = {
   response?: { data?: { message?: string } };
@@ -48,11 +50,21 @@ export default function TaskFormModal({
   onSuccess,
 }: Props) {
   const createdByUserId = useCurrentUserId();
+  const [rooms, setRooms] = useState<RoomSimple[]>([]);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const isValid = form.title.trim() !== "" && createdByUserId !== null;
+
+  useEffect(() => {
+    if (open) {
+      roomApi
+          .getRoomsSimple()
+          .then(setRooms)
+          .catch(() => setError("Nie udało się pobrać listy pokoi"));
+    }
+  }, [open]);
 
   const handleSubmit = async () => {
     if (!isValid || createdByUserId === null) {
@@ -136,13 +148,26 @@ export default function TaskFormModal({
             multiline
             minRows={2}
           />
-          <TextField
-            label="Numer pokoju (opcjonalnie)"
-            type="number"
-            value={form.roomId}
-            onChange={(e) => setForm({ ...form, roomId: e.target.value })}
-            fullWidth
-          />
+          <FormControl fullWidth>
+            <InputLabel>Pokój</InputLabel>
+            <Select
+              label="Pokój"
+              value={form.roomId}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  roomId: e.target.value,
+                })
+              }
+            >
+              <MenuItem value="">Brak pokoju</MenuItem>
+              {rooms.map((room) => (
+                <MenuItem key={room.roomId} value={room.roomId}>
+                  Pokój nr {room.roomNumber}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl fullWidth>
             <InputLabel>Priorytet</InputLabel>
             <Select

@@ -10,3 +10,8 @@ export type Room = {
   floor: number | null;
   areaM2: number | null;
 };
+
+export type RoomSimple = {
+  roomId: number;
+  roomNumber: string;
+};

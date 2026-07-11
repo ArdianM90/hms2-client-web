@@ -58,9 +58,9 @@ export default function Layout() {
             <Button component={Link} to="/reservation" color="inherit">
               Rezerwacje
             </Button>
-              <Button component={Link} to="/my-tasks" color="inherit">
-                  Moje zadania
-              </Button>
+            <Button component={Link} to="/my-tasks" color="inherit">
+              Moje zadania
+            </Button>
             <Button
               variant="outlined"
               sx={{

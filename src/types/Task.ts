@@ -20,6 +20,7 @@ export interface TaskListItem {
   createdByFirstName: string;
   createdByLastName: string;
   roomId: number | null;
+  roomNumber: string | null;
   reservationId: number | null;
   taskTypeCode: string;
   taskType: string;
