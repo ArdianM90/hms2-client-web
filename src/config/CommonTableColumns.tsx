@@ -2,7 +2,7 @@ import { formatDateTime } from "../helpers/Formatter.ts";
 import { Chip } from "@mui/material";
 import type { TableColumn } from "../types/TableColumn.ts";
 import type { ReservationInfo } from "../types/ReservationInfo.ts";
-import {type TaskListItem, TaskStatus} from "../types/Task.ts";
+import { type TaskListItem, TaskStatus } from "../types/Task.ts";
 
 const TASK_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   [TaskStatus.ASSIGNED]: { bg: "rgba(107,16,32,0.08)", text: "#6b1020" },
@@ -66,6 +66,23 @@ export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
 
 export const commonTaskColumns: TableColumn<TaskListItem>[] = [
   {
+    header: "Rodzaj zadania",
+    sortKey: "task_type",
+    render: (dto) => {
+      return (
+        <Chip
+          label={dto.taskType.name}
+          size="small"
+          sx={{
+            bgcolor: "rgba(107,16,32,0.08)",
+            color: "#6b1020",
+            fontWeight: 600,
+          }}
+        />
+      );
+    },
+  },
+  {
     header: "Tytuł",
     sortKey: "title",
     render: (dto) => dto.title,
@@ -73,7 +90,7 @@ export const commonTaskColumns: TableColumn<TaskListItem>[] = [
   {
     header: "Pokój",
     sortKey: "room_number",
-    render: (dto) => dto.roomNumber ? `nr ${dto.roomNumber}` : "—",
+    render: (dto) => (dto.roomNumber ? `nr ${dto.roomNumber}` : "—"),
   },
   {
     header: "Priorytet",
@@ -84,23 +101,23 @@ export const commonTaskColumns: TableColumn<TaskListItem>[] = [
     header: "Termin",
     sortKey: "dueAt",
     render: (dto) =>
-        dto.dueAt ? new Date(dto.dueAt).toLocaleString("pl-PL") : "—",
+      dto.dueAt ? new Date(dto.dueAt).toLocaleString("pl-PL") : "—",
   },
   {
     header: "Status",
-    sortKey: "task_type",
+    sortKey: "status",
     render: (dto) => {
       const { bg, text } = statusColor(dto.status.code);
       return (
-          <Chip
-              label={dto.status.name}
-              size="small"
-              sx={{
-                bgcolor: bg,
-                color: text,
-                fontWeight: 500,
-              }}
-          />
+        <Chip
+          label={dto.status.name}
+          size="small"
+          sx={{
+            bgcolor: bg,
+            color: text,
+            fontWeight: 500,
+          }}
+        />
       );
     },
   },

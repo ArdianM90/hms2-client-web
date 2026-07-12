@@ -52,7 +52,7 @@ export type UpdateStatusRequest = {
 };
 
 export type TasksFilterParams = {
-  // userId?: string;
+  query?: string;
   taskTypeCodes?: string[];
   dueFrom?: string;
   dueTo?: string;

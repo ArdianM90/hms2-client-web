@@ -13,11 +13,13 @@ import { userManager } from "../auth/oidcClient";
 import { useAuth } from "../auth/AuthContext.ts";
 
 export default function Layout() {
-  const { isAdmin, isEmployee, isGuest } = useAuth();
+  const { sub, isAdmin, isEmployee, isGuest } = useAuth();
+
+  const login = async () => {
+    await userManager.signinRedirect();
+  };
 
   const logout = async () => {
-    const user = await userManager.getUser();
-    console.log("id_token:", user?.id_token);
     await userManager.signoutRedirect();
   };
 
@@ -70,16 +72,33 @@ export default function Layout() {
                 {isAdmin ? "Zadania pracowników" : "Moje zadania"}
               </Button>
             )}
-            <Button
-              variant="outlined"
-              sx={{
-                color: "white",
-                borderColor: "rgba(255,255,255,0.5)",
-              }}
-              onClick={logout}
-            >
-              Wyloguj
-            </Button>
+            {sub ? (
+              <Button
+                variant="outlined"
+                sx={{
+                  color: "white",
+                  borderColor: "rgba(255,255,255,0.5)",
+                }}
+                onClick={logout}
+              >
+                Wyloguj
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: "white",
+                  color: "#6b1020",
+                  fontWeight: 600,
+                  "&:hover": {
+                    bgcolor: "#f3f3f3",
+                  },
+                }}
+                onClick={login}
+              >
+                Zaloguj
+              </Button>
+            )}
           </Stack>
         </Toolbar>
       </AppBar>

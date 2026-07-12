@@ -27,7 +27,7 @@ import type { TableColumn } from "../../types/TableColumn.ts";
 import { commonTaskColumns } from "../../config/CommonTableColumns.tsx";
 import TasksTable from "../../components/TasksTable.tsx";
 import type { PageableParam, PageableResult } from "../../types/Pageable.ts";
-import {useAuth} from "../../auth/AuthContext.ts";
+import { useAuth } from "../../auth/AuthContext.ts";
 
 export default function TasksPage() {
   const navigate = useNavigate();
@@ -47,7 +47,10 @@ export default function TasksPage() {
   const [descending, setDescending] = useState(false);
 
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [selectedTaskTypes, setSelectedTaskTypes] = useState<DictionaryValue[]>([]);
+  const [selectedTaskTypes, setSelectedTaskTypes] = useState<DictionaryValue[]>(
+    [],
+  );
+  const [query, setQuery] = useState("");
   const [dueFrom, setDueFrom] = useState<string>("");
   const [dueTo, setDueTo] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<TasksFilterParams>({});
@@ -56,8 +59,16 @@ export default function TasksPage() {
     setLoading(true);
     setError(null);
     try {
-      const pageable: PageableParam = { page: page + 1, pageSize, sortBy, descending };
-      const data: PageableResult<TaskListItem[]> = await taskApi.getTasks(appliedFilters, pageable);
+      const pageable: PageableParam = {
+        page: page + 1,
+        pageSize,
+        sortBy,
+        descending,
+      };
+      const data: PageableResult<TaskListItem[]> = await taskApi.getTasks(
+        appliedFilters,
+        pageable,
+      );
       setTasks(data.results);
       setTotal(data.total);
     } catch {
@@ -68,7 +79,9 @@ export default function TasksPage() {
   };
 
   useEffect(() => {
-    dictionaryApi.getDictionary(DictionaryType.EMPLOYEE_TASK).then(setTaskTypes);
+    dictionaryApi
+      .getDictionary(DictionaryType.EMPLOYEE_TASK)
+      .then(setTaskTypes);
   }, []);
 
   useEffect(() => {
@@ -88,19 +101,26 @@ export default function TasksPage() {
   };
 
   const updateLocalStatus = (
-      employeeTaskId: number,
-      status: DictionaryValue,
-      extra?: Partial<TaskListItem>,
+    employeeTaskId: number,
+    status: DictionaryValue,
+    extra?: Partial<TaskListItem>,
   ) => {
     setTasks((prev) =>
-        prev.map((t) => (t.employeeTaskId === employeeTaskId ? { ...t, status, ...extra } : t)),
+      prev.map((t) =>
+        t.employeeTaskId === employeeTaskId ? { ...t, status, ...extra } : t,
+      ),
     );
   };
 
   const handleStart = async (employeeTaskId: number) => {
     try {
-      await taskApi.updateStatus(employeeTaskId, { statusCode: TaskStatus.IN_PROGRESS });
-      updateLocalStatus(employeeTaskId, { code: TaskStatus.IN_PROGRESS, name: "W trakcie" });
+      await taskApi.updateStatus(employeeTaskId, {
+        statusCode: TaskStatus.IN_PROGRESS,
+      });
+      updateLocalStatus(employeeTaskId, {
+        code: TaskStatus.IN_PROGRESS,
+        name: "W trakcie",
+      });
     } catch {
       alert("Nie udało się rozpocząć zadania");
     }
@@ -109,8 +129,15 @@ export default function TasksPage() {
   const handleComplete = async (employeeTaskId: number) => {
     const completedAt = new Date().toISOString();
     try {
-      await taskApi.updateStatus(employeeTaskId, { statusCode: TaskStatus.COMPLETED, completedAt });
-      updateLocalStatus(employeeTaskId, { code: TaskStatus.COMPLETED, name: "Wykonane" }, { completedAt });
+      await taskApi.updateStatus(employeeTaskId, {
+        statusCode: TaskStatus.COMPLETED,
+        completedAt,
+      });
+      updateLocalStatus(
+        employeeTaskId,
+        { code: TaskStatus.COMPLETED, name: "Wykonane" },
+        { completedAt },
+      );
     } catch {
       alert("Nie udało się zakończyć zadania");
     }
@@ -119,13 +146,17 @@ export default function TasksPage() {
   const applyFilters = () => {
     setPage(0);
     setAppliedFilters({
-      taskTypeCodes: selectedTaskTypes.length ? selectedTaskTypes.map((t) => t.code) : undefined,
+      query: query.trim() || undefined,
+      taskTypeCodes: selectedTaskTypes.length
+        ? selectedTaskTypes.map((t) => t.code)
+        : undefined,
       dueFrom: dueFrom || undefined,
       dueTo: dueTo || undefined,
     });
   };
 
   const clearFilters = () => {
+    setQuery("");
     setSelectedTaskTypes([]);
     setDueFrom("");
     setDueTo("");
@@ -134,9 +165,10 @@ export default function TasksPage() {
   };
 
   const activeFilterCount =
-      (appliedFilters.taskTypeCodes?.length ?? 0) +
-      (appliedFilters.dueFrom ? 1 : 0) +
-      (appliedFilters.dueTo ? 1 : 0);
+    (appliedFilters.query ? 1 : 0) +
+    (appliedFilters.taskTypeCodes?.length ?? 0) +
+    (appliedFilters.dueFrom ? 1 : 0) +
+    (appliedFilters.dueTo ? 1 : 0);
 
   const assigneeColumn: TableColumn<TaskListItem> = {
     header: "Pracownik",
@@ -147,23 +179,37 @@ export default function TasksPage() {
     header: "Akcje",
     align: "center",
     render: (dto) => (
-        <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
-          {dto.status.code === TaskStatus.ASSIGNED && (
-              <Button size="small" startIcon={<PlayArrowIcon />} onClick={() => void handleStart(dto.employeeTaskId)} sx={{ color: "#6b1020" }}>
-                Rozpocznij
-              </Button>
-          )}
-          {dto.status.code === TaskStatus.IN_PROGRESS && (
-              <Button size="small" startIcon={<TaskAltIcon />} onClick={() => void handleComplete(dto.employeeTaskId)} sx={{ color: "#6b1020" }}>
-                Zakończ
-              </Button>
-          )}
-          {dto.reservationId !== null && (
-              <Button size="small" startIcon={<InfoOutlinedIcon />} onClick={() => navigate(`/reservation/${dto.reservationId}`)}>
-                Szczegóły rezerwacji
-              </Button>
-          )}
-        </Box>
+      <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
+        {dto.status.code === TaskStatus.ASSIGNED && (
+          <Button
+            size="small"
+            startIcon={<PlayArrowIcon />}
+            onClick={() => void handleStart(dto.employeeTaskId)}
+            sx={{ color: "#6b1020" }}
+          >
+            Rozpocznij
+          </Button>
+        )}
+        {dto.status.code === TaskStatus.IN_PROGRESS && (
+          <Button
+            size="small"
+            startIcon={<TaskAltIcon />}
+            onClick={() => void handleComplete(dto.employeeTaskId)}
+            sx={{ color: "#6b1020" }}
+          >
+            Zakończ
+          </Button>
+        )}
+        {dto.reservationId !== null && (
+          <Button
+            size="small"
+            startIcon={<InfoOutlinedIcon />}
+            onClick={() => navigate(`/reservation/${dto.reservationId}`)}
+          >
+            Szczegóły rezerwacji
+          </Button>
+        )}
+      </Box>
     ),
   };
 
@@ -178,83 +224,150 @@ export default function TasksPage() {
   }
 
   return (
-      <Box>
-        <Typography variant="h4" sx={{ mb: 3 }}>
-          {isAdmin ? "Lista zadań" : "Moje zadania"}
-        </Typography>
+    <Box>
+      <Typography variant="h4" sx={{ mb: 3 }}>
+        {isAdmin ? "Lista zadań" : "Moje zadania"}
+      </Typography>
 
-        <Card sx={{ borderLeft: "5px solid #6b1020" }}>
-          <CardContent>
-            <Stack direction="row" spacing={2} sx={{ alignItems: "center", justifyContent: "space-between", mb: 2, flexWrap: "wrap", rowGap: 1 }}>
-              <Button startIcon={<FilterListIcon />} onClick={() => setFiltersOpen((prev) => !prev)} sx={{ color: "#6b1020" }}>
-                Filtry {activeFilterCount > 0 && `(${activeFilterCount})`}
-              </Button>
-            </Stack>
+      <Card sx={{ borderLeft: "5px solid #6b1020" }}>
+        <CardContent>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 2,
+              flexWrap: "wrap",
+              rowGap: 1,
+            }}
+          >
+            <Button
+              startIcon={<FilterListIcon />}
+              onClick={() => setFiltersOpen((prev) => !prev)}
+              sx={{ color: "#6b1020" }}
+            >
+              Filtry {activeFilterCount > 0 && `(${activeFilterCount})`}
+            </Button>
+          </Stack>
 
-            <Collapse in={filtersOpen}>
-              <Box sx={{ mb: 2, p: 2, border: "1px solid rgba(0,0,0,0.12)", borderRadius: 1 }}>
-                <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ alignItems: "center" }}>
-                  <Autocomplete
-                      multiple
-                      size="small"
-                      sx={{ minWidth: 260 }}
-                      options={taskTypes}
-                      getOptionLabel={(o) => o.name}
-                      isOptionEqualToValue={(a, b) => a.code === b.code}
-                      value={selectedTaskTypes}
-                      onChange={(_, value) => setSelectedTaskTypes(value)}
-                      renderInput={(params) => <TextField {...params} label="Typ zadania" />}
+          <Collapse in={filtersOpen}>
+            <Box
+              sx={{
+                mb: 2,
+                p: 2,
+                border: "1px solid rgba(0,0,0,0.12)",
+                borderRadius: 1,
+              }}
+            >
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={2}
+                sx={{ alignItems: "center" }}
+              >
+                {isAdmin && (
+                  <TextField
+                    size="small"
+                    label="Pracownik"
+                    placeholder="Imię lub nazwisko"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    sx={{ minWidth: 260 }}
                   />
-                  <TextField size="small" type="date" label="Termin od" slotProps={{ inputLabel: { shrink: true } }} value={dueFrom} onChange={(e) => setDueFrom(e.target.value)} />
-                  <TextField size="small" type="date" label="Termin do" slotProps={{ inputLabel: { shrink: true } }} value={dueTo} onChange={(e) => setDueTo(e.target.value)} />
-                  <Stack direction="row" spacing={1}>
-                    <Button variant="contained" size="small" onClick={applyFilters} sx={{ bgcolor: "#6b1020", "&:hover": { bgcolor: "#55081a" } }}>
-                      Zastosuj
-                    </Button>
-                    <Button size="small" startIcon={<FilterListIcon />} onClick={clearFilters}>
-                      Wyczyść
-                    </Button>
-                  </Stack>
-                </Stack>
-              </Box>
-            </Collapse>
-
-            {loading ? (
-                <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
-                  <CircularProgress sx={{ color: "#6b1020" }} />
-                </Box>
-            ) : (
-                <>
-                  <TasksTable
-                      tasks={tasks}
-                      columns={columns}
-                      sortBy={sortBy}
-                      sortDescending={descending}
-                      onSortChange={handleSortChange}
-                  />
-
-                  {tasks.length === 0 && (
-                      <Typography sx={{ mt: 2, color: "text.secondary" }}>Brak przydzielonych zadań</Typography>
+                )}
+                <Autocomplete
+                  multiple
+                  size="small"
+                  sx={{ minWidth: 260 }}
+                  options={taskTypes}
+                  getOptionLabel={(o) => o.name}
+                  isOptionEqualToValue={(a, b) => a.code === b.code}
+                  value={selectedTaskTypes}
+                  onChange={(_, value) => setSelectedTaskTypes(value)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Rodzaj zadania" />
                   )}
+                />
+                <TextField
+                  size="small"
+                  type="date"
+                  label="Termin od"
+                  slotProps={{ inputLabel: { shrink: true } }}
+                  value={dueFrom}
+                  onChange={(e) => setDueFrom(e.target.value)}
+                />
+                <TextField
+                  size="small"
+                  type="date"
+                  label="Termin do"
+                  slotProps={{ inputLabel: { shrink: true } }}
+                  value={dueTo}
+                  onChange={(e) => setDueTo(e.target.value)}
+                />
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={applyFilters}
+                    sx={{
+                      bgcolor: "#6b1020",
+                      "&:hover": { bgcolor: "#55081a" },
+                    }}
+                  >
+                    Zastosuj
+                  </Button>
+                  <Button
+                    size="small"
+                    startIcon={<FilterListIcon />}
+                    onClick={clearFilters}
+                  >
+                    Wyczyść
+                  </Button>
+                </Stack>
+              </Stack>
+            </Box>
+          </Collapse>
 
-                  <TablePagination
-                      component="div"
-                      count={total}
-                      page={page}
-                      onPageChange={(_, newPage) => setPage(newPage)}
-                      rowsPerPage={pageSize}
-                      onRowsPerPageChange={(e) => {
-                        setPageSize(parseInt(e.target.value, 10));
-                        setPage(0);
-                      }}
-                      rowsPerPageOptions={[10, 20, 50]}
-                      labelRowsPerPage="Wierszy na stronę"
-                      labelDisplayedRows={({ from, to, count }) => `${from}–${to} z ${count}`}
-                  />
-                </>
-            )}
-          </CardContent>
-        </Card>
-      </Box>
+          {loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+              <CircularProgress sx={{ color: "#6b1020" }} />
+            </Box>
+          ) : (
+            <>
+              <TasksTable
+                tasks={tasks}
+                columns={columns}
+                sortBy={sortBy}
+                sortDescending={descending}
+                onSortChange={handleSortChange}
+              />
+
+              {tasks.length === 0 && (
+                <Typography sx={{ mt: 2, color: "text.secondary" }}>
+                  Brak przydzielonych zadań
+                </Typography>
+              )}
+
+              <TablePagination
+                component="div"
+                count={total}
+                page={page}
+                onPageChange={(_, newPage) => setPage(newPage)}
+                rowsPerPage={pageSize}
+                onRowsPerPageChange={(e) => {
+                  setPageSize(parseInt(e.target.value, 10));
+                  setPage(0);
+                }}
+                rowsPerPageOptions={[10, 20, 50]}
+                labelRowsPerPage="Wierszy na stronę"
+                labelDisplayedRows={({ from, to, count }) =>
+                  `${from}–${to} z ${count}`
+                }
+              />
+            </>
+          )}
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

@@ -27,8 +27,8 @@ import { dictionaryApi, DictionaryType } from "../../../api/dictionaryApi.ts";
 import type { PageableParam, PageableResult } from "../../../types/Pageable.ts";
 import type { TasksFilterParams } from "../../../types/Task.ts";
 import TasksTable from "../../../components/TasksTable.tsx";
-import type {TableColumn} from "../../../types/TableColumn.ts";
-import {commonTaskColumns} from "../../../config/CommonTableColumns.tsx";
+import type { TableColumn } from "../../../types/TableColumn.ts";
+import { commonTaskColumns } from "../../../config/CommonTableColumns.tsx";
 
 type LocationState = { assigneeName?: string } | null;
 
@@ -182,7 +182,6 @@ export default function ManageTasksPage() {
             >
               Filtry {activeFilterCount > 0 && `(${activeFilterCount})`}
             </Button>
-
           </Stack>
 
           <Collapse in={filtersOpen}>
@@ -209,7 +208,7 @@ export default function ManageTasksPage() {
                   value={selectedTaskTypes}
                   onChange={(_, value) => setSelectedTaskTypes(value)}
                   renderInput={(params) => (
-                    <TextField {...params} label="Typ zadania" />
+                    <TextField {...params} label="Rodzaj zadania" />
                   )}
                 />
                 <TextField
@@ -260,11 +259,11 @@ export default function ManageTasksPage() {
             <>
               <TableContainer>
                 <TasksTable
-                    tasks={tasks}
-                    columns={columns}
-                    sortBy={sortBy}
-                    sortDescending={descending}
-                    onSortChange={handleSortChange}
+                  tasks={tasks}
+                  columns={columns}
+                  sortBy={sortBy}
+                  sortDescending={descending}
+                  onSortChange={handleSortChange}
                 />
               </TableContainer>
 
