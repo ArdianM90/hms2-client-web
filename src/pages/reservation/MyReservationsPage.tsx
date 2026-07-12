@@ -69,7 +69,7 @@ export default function MyReservationsPage() {
                 ...r,
                 reservationStatus: {
                   code: ReservationStatusCode.CANCELLED,
-                  label: getStatusLabel(ReservationStatusCode.CANCELLED),
+                  name: getStatusLabel(ReservationStatusCode.CANCELLED),
                 },
               }
             : r,

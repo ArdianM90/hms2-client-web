@@ -134,7 +134,9 @@ export default function ManageEmployeeTasksPage() {
                 {tasks.map((task) => (
                   <TableRow key={task.employeeTaskId}>
                     <TableCell>{task.title}</TableCell>
-                    <TableCell align="center">{task.roomNumber ? `nr ${task.roomNumber}` : "—"}</TableCell>
+                    <TableCell align="center">
+                      {task.roomNumber ? `nr ${task.roomNumber}` : "—"}
+                    </TableCell>
                     <TableCell align="center">{task.priority}</TableCell>
                     <TableCell align="center">
                       {task.dueAt

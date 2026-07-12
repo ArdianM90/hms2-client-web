@@ -60,9 +60,9 @@ export default function TaskFormModal({
   useEffect(() => {
     if (open) {
       roomApi
-          .getRoomsSimple()
-          .then(setRooms)
-          .catch(() => setError("Nie udało się pobrać listy pokoi"));
+        .getRoomsSimple()
+        .then(setRooms)
+        .catch(() => setError("Nie udało się pobrać listy pokojów"));
     }
   }, [open]);
 

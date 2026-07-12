@@ -29,7 +29,7 @@ export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
     header: "Status",
     render: (dto) => (
       <Chip
-        label={dto.reservationStatus.label}
+        label={dto.reservationStatus.name}
         size="small"
         sx={{
           bgcolor: "rgba(107,16,32,0.08)",
@@ -41,7 +41,7 @@ export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
   },
   {
     header: "Źródło",
-    render: (dto) => dto.reservationSource.label,
+    render: (dto) => dto.reservationSource.name,
   },
   {
     header: "Pokoje",

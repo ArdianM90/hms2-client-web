@@ -82,11 +82,11 @@ export default function ReservationDetailsPage() {
               </Typography>
               <InfoBox
                 label="Status"
-                value={reservation.reservationStatus.label}
+                value={reservation.reservationStatus.name}
               />
               <InfoBox
                 label="Źródło"
-                value={reservation.reservationSource.label}
+                value={reservation.reservationSource.name}
               />
               <InfoBox
                 label="Pobyt"

@@ -38,7 +38,7 @@ export default function ManageReservationsPage() {
                 ...r,
                 reservationStatus: {
                   code: statusCode,
-                  label: getStatusLabel(statusCode),
+                  name: getStatusLabel(statusCode),
                 },
               }
             : r,

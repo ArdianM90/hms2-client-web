@@ -3,10 +3,10 @@ import type { ReservationSourceCode } from "../constants/reservationSource.ts";
 
 export type ReservationStatusValue = {
   code: ReservationStatusCode;
-  label: string;
+  name: string;
 };
 
 export type ReservationSourceValue = {
   code: ReservationSourceCode;
-  label: string;
+  name: string;
 };
