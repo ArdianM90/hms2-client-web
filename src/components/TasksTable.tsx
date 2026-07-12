@@ -5,6 +5,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  TableSortLabel,
 } from "@mui/material";
 import type { TableColumn } from "../types/TableColumn.ts";
 
@@ -12,12 +13,18 @@ type Props<T> = {
   tasks: T[];
   columns: TableColumn<T>[];
   onRowClick?: (dto: T) => void;
+  sortBy?: string;
+  sortDescending?: boolean;
+  onSortChange?: (sortKey: string) => void;
 };
 
 export default function TasksTable<T extends { employeeTaskId: number }>({
   tasks,
   columns,
   onRowClick,
+  sortBy,
+  sortDescending,
+  onSortChange,
 }: Props<T>) {
   return (
     <TableContainer>
@@ -30,7 +37,27 @@ export default function TasksTable<T extends { employeeTaskId: number }>({
           >
             {columns.map((col, i) => (
               <TableCell key={i} align={col.align}>
-                {col.header}
+                {col.sortKey && onSortChange ? (
+                  <TableSortLabel
+                    active={sortBy === col.sortKey}
+                    direction={
+                      sortBy === col.sortKey && sortDescending ? "desc" : "asc"
+                    }
+                    onClick={() => onSortChange(col.sortKey!)}
+                    sx={{
+                      "&.MuiTableSortLabel-active, &:hover": {
+                        color: "#6b1020",
+                      },
+                      "& .MuiTableSortLabel-icon": {
+                        color: "#6b1020 !important",
+                      },
+                    }}
+                  >
+                    {col.header}
+                  </TableSortLabel>
+                ) : (
+                  col.header
+                )}
               </TableCell>
             ))}
           </TableRow>

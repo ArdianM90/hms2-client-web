@@ -20,57 +20,75 @@ import MyReservationsPage from "../pages/reservation/MyReservationsPage.tsx";
 import ReservationDetailsPage from "../pages/reservation/ReservationDetailsPage.tsx";
 import ManageReservationsPage from "../pages/admin/reservations/ManageReservationsPage.tsx";
 import ManageUsersPage from "../pages/admin/users/ManageUsersPage.tsx";
-import ManageEmployeeTasksPage from "../pages/admin/users/ManageEmployeeTasksPage.tsx";
-import MyTasksPage from "../pages/task/MyTasksPage.tsx";
+import ManageTasksPage from "../pages/admin/users/ManageTasksPage.tsx";
+import TasksPage from "../pages/task/TasksPage.tsx";
+import { AuthProvider } from "../auth/AuthProvider.tsx";
+import RoleGuard from "./RoleGuard.tsx";
 
 export default function AppRouter() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route
-          path="/register"
-          element={
-            <PublicOnlyRoute>
-              <RegisterPage />
-            </PublicOnlyRoute>
-          }
-        />
-        <Route path="/callback" element={<CallbackPage />} />
-        <Route element={<Layout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/logout" element={<LogoutPage />} />
-        </Route>
-        <Route element={<ProtectedRoute />}>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/register"
+            element={
+              <PublicOnlyRoute>
+                <RegisterPage />
+              </PublicOnlyRoute>
+            }
+          />
+          <Route path="/callback" element={<CallbackPage />} />
           <Route element={<Layout />}>
-            <Route path="admin" element={<AdminLayout />}>
-              <Route index element={<Navigate to="rooms" replace />} />
-              <Route path="rooms" element={<ManageRoomsPage />} />
-              <Route path="rooms/add" element={<RoomAddPage />} />
-              <Route path="rooms/:id" element={<RoomDetailsPage />} />
-              <Route path="rooms/:id/edit" element={<RoomEditPage />} />
-              <Route path="hotel" element={<ManageHotelPage />} />
-              <Route path="reservations" element={<ManageReservationsPage />} />
-              <Route path="users" element={<ManageUsersPage />} />
-              <Route
-                path="users/:userId/tasks"
-                element={<ManageEmployeeTasksPage />}
-              />
-            </Route>
-            <Route path="reservation" element={<ReservationLayout />}>
-              <Route index element={<Navigate to="book" replace />} />
-              <Route path="book" element={<BookReservationPage />} />
-              <Route path="my" element={<MyReservationsPage />} />
-              <Route
-                path=":reservationId"
-                element={<ReservationDetailsPage />}
-              />
-              <Route path="confirmation" element={<ConfirmReservationPage />} />
-            </Route>
-            <Route path="my-tasks" element={<MyTasksPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/logout" element={<LogoutPage />} />
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route element={<RoleGuard allow={(auth) => auth.isAdmin} />}>
+                <Route path="admin" element={<AdminLayout />}>
+                  <Route index element={<Navigate to="rooms" replace />} />
+                  <Route path="rooms" element={<ManageRoomsPage />} />
+                  <Route path="rooms/add" element={<RoomAddPage />} />
+                  <Route path="rooms/:id" element={<RoomDetailsPage />} />
+                  <Route path="rooms/:id/edit" element={<RoomEditPage />} />
+                  <Route path="hotel" element={<ManageHotelPage />} />
+                  <Route
+                    path="reservations"
+                    element={<ManageReservationsPage />}
+                  />
+                  <Route path="users" element={<ManageUsersPage />} />
+                  <Route
+                    path="users/:userId/tasks"
+                    element={<ManageTasksPage />}
+                  />
+                </Route>
+              </Route>
+
+              <Route element={<RoleGuard allow={(auth) => auth.isGuest} />}>
+                <Route path="reservation" element={<ReservationLayout />}>
+                  <Route index element={<Navigate to="book" replace />} />
+                  <Route path="book" element={<BookReservationPage />} />
+                  <Route path="my" element={<MyReservationsPage />} />
+                  <Route
+                    path=":reservationId"
+                    element={<ReservationDetailsPage />}
+                  />
+                  <Route
+                    path="confirmation"
+                    element={<ConfirmReservationPage />}
+                  />
+                </Route>
+              </Route>
+
+              <Route element={<RoleGuard allow={(auth) => auth.isEmployee} />}>
+                <Route path="tasks" element={<TasksPage />} />
+              </Route>
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

@@ -2,7 +2,18 @@ import { formatDateTime } from "../helpers/Formatter.ts";
 import { Chip } from "@mui/material";
 import type { TableColumn } from "../types/TableColumn.ts";
 import type { ReservationInfo } from "../types/ReservationInfo.ts";
-import type { MyTaskListItem } from "../types/Task.ts";
+import {type TaskListItem, TaskStatus} from "../types/Task.ts";
+
+const TASK_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
+  [TaskStatus.ASSIGNED]: { bg: "rgba(107,16,32,0.08)", text: "#6b1020" },
+  [TaskStatus.IN_PROGRESS]: { bg: "rgba(255,152,0,0.12)", text: "#e65100" },
+  [TaskStatus.COMPLETED]: { bg: "rgba(46,125,50,0.12)", text: "#2e7d32" },
+  [TaskStatus.CANCELLED]: { bg: "rgba(0,0,0,0.08)", text: "rgba(0,0,0,0.6)" },
+};
+
+function statusColor(code: string) {
+  return TASK_STATUS_COLORS[code];
+}
 
 export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
   {
@@ -53,22 +64,44 @@ export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
   },
 ];
 
-export const commonTaskColumns: TableColumn<MyTaskListItem>[] = [
+export const commonTaskColumns: TableColumn<TaskListItem>[] = [
   {
     header: "Tytuł",
+    sortKey: "title",
     render: (dto) => dto.title,
   },
   {
     header: "Pokój",
-    render: (dto) => dto.roomNumber ?? "—",
+    sortKey: "room_number",
+    render: (dto) => dto.roomNumber ? `nr ${dto.roomNumber}` : "—",
   },
   {
     header: "Priorytet",
+    sortKey: "priority",
     render: (dto) => dto.priority,
   },
   {
     header: "Termin",
+    sortKey: "dueAt",
     render: (dto) =>
-      dto.dueAt ? new Date(dto.dueAt).toLocaleString("pl-PL") : "—",
+        dto.dueAt ? new Date(dto.dueAt).toLocaleString("pl-PL") : "—",
+  },
+  {
+    header: "Status",
+    sortKey: "task_type",
+    render: (dto) => {
+      const { bg, text } = statusColor(dto.status.code);
+      return (
+          <Chip
+              label={dto.status.name}
+              size="small"
+              sx={{
+                bgcolor: bg,
+                color: text,
+                fontWeight: 500,
+              }}
+          />
+      );
+    },
   },
 ];

@@ -1,3 +1,5 @@
+import type { DictionaryValue } from "./DictionaryValue.ts";
+
 export const TaskType = {
   PREPARE_ROOM: "prepare_room",
 } as const;
@@ -11,21 +13,18 @@ export const TaskStatus = {
 } as const;
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
 
-export interface TaskListItem {
+export type TaskListItem = {
   employeeTaskId: number;
+  createdByUserId: string;
+  createdByFirstName: string;
+  createdByLastName: string;
   assigneeUserId: string;
   assigneeFirstName: string;
   assigneeLastName: string;
-  createdByUserId: string;
-  createdByFirstName: string;
-  createdByLastName: string;
-  roomId: number | null;
   roomNumber: string | null;
   reservationId: number | null;
-  taskTypeCode: string;
-  taskType: string;
-  statusCode: string;
-  status: string;
+  taskType: DictionaryValue;
+  status: DictionaryValue;
   title: string;
   description: string | null;
   priority: number;
@@ -33,29 +32,9 @@ export interface TaskListItem {
   createdAt: string;
   startedAt: string | null;
   completedAt: string | null;
-}
+};
 
-export interface MyTaskListItem {
-  employeeTaskId: number;
-  createdByUserId: string;
-  createdByFirstName: string;
-  createdByLastName: string;
-  roomNumber: string | null;
-  reservationId: number | null;
-  taskTypeCode: string;
-  taskType: string;
-  statusCode: string;
-  status: string;
-  title: string;
-  description: string | null;
-  priority: number;
-  dueAt: string | null;
-  createdAt: string;
-  startedAt: string | null;
-  completedAt: string | null;
-}
-
-export interface AddTaskRequest {
+export type AddTaskRequest = {
   assigneeUserId: string;
   createdByUserId: string;
   roomId?: number | null;
@@ -65,13 +44,16 @@ export interface AddTaskRequest {
   description?: string | null;
   priority?: number;
   dueAt?: string | null;
-}
+};
 
-export interface UpdateStatusRequest {
+export type UpdateStatusRequest = {
   statusCode: TaskStatus;
   completedAt?: string | null;
-}
+};
 
-export interface TasksFilterParams {
-  userId?: string;
-}
+export type TasksFilterParams = {
+  // userId?: string;
+  taskTypeCodes?: string[];
+  dueFrom?: string;
+  dueTo?: string;
+};

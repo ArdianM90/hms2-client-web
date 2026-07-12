@@ -10,8 +10,11 @@ import {
   Divider,
 } from "@mui/material";
 import { userManager } from "../auth/oidcClient";
+import { useAuth } from "../auth/AuthContext.ts";
 
 export default function Layout() {
+  const { isAdmin, isEmployee, isGuest } = useAuth();
+
   const logout = async () => {
     const user = await userManager.getUser();
     console.log("id_token:", user?.id_token);
@@ -52,15 +55,21 @@ export default function Layout() {
             <Button component={Link} to="/dashboard" color="inherit">
               Dashboard
             </Button>
-            <Button component={Link} to="/admin" color="inherit">
-              Administracja
-            </Button>
-            <Button component={Link} to="/reservation" color="inherit">
-              Rezerwacje
-            </Button>
-            <Button component={Link} to="/my-tasks" color="inherit">
-              Moje zadania
-            </Button>
+            {isAdmin && (
+              <Button component={Link} to="/admin" color="inherit">
+                Administracja
+              </Button>
+            )}
+            {isGuest && (
+              <Button component={Link} to="/reservation" color="inherit">
+                Rezerwacje
+              </Button>
+            )}
+            {isEmployee && (
+              <Button component={Link} to="/tasks" color="inherit">
+                {isAdmin ? "Zadania pracowników" : "Moje zadania"}
+              </Button>
+            )}
             <Button
               variant="outlined"
               sx={{
