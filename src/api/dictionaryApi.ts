@@ -2,6 +2,7 @@ import { api } from "./axios";
 import type { DictionaryValue } from "../types/DictionaryValue";
 
 export const DictionaryType = {
+  RESERVATION_STATUS: "reservation_status",
   ROOM_STANDARD: "room_standard",
   DOCUMENT_TYPE: "document_type",
   CITIZENSHIP: "citizenship",

@@ -1,11 +1,11 @@
 import { Button } from "@mui/material";
-import type { AdminReservationInfo } from "../types/AdminReservationInfo.ts";
 import { ReservationStatusCode } from "../constants/reservationStatus.ts";
 import CheckInModal from "./CheckInModal.tsx";
 import { useState } from "react";
+import type { ReservationDto } from "../types/Reservation.ts";
 
 type Props = {
-  dto: AdminReservationInfo;
+  dto: ReservationDto;
   onStatusChange: (reservationId: number, code: ReservationStatusCode) => void;
 };
 

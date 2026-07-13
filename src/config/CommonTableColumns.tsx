@@ -1,8 +1,8 @@
 import { formatDateTime } from "../helpers/Formatter.ts";
 import { Chip } from "@mui/material";
 import type { TableColumn } from "../types/TableColumn.ts";
-import type { ReservationInfo } from "../types/ReservationInfo.ts";
 import { type TaskListItem, TaskStatus } from "../types/Task.ts";
+import type { ReservationDto } from "../types/Reservation.ts";
 
 const TASK_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   [TaskStatus.ASSIGNED]: { bg: "rgba(107,16,32,0.08)", text: "#6b1020" },
@@ -15,21 +15,20 @@ function statusColor(code: string) {
   return TASK_STATUS_COLORS[code];
 }
 
-export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
-  {
-    header: "#",
-    render: (_, index) => index + 1,
-  },
+export const commonReservationColumns: TableColumn<ReservationDto>[] = [
   {
     header: "Data utworzenia",
+    sortKey: "created_at",
     render: (dto) => formatDateTime(dto.createdAt),
   },
   {
     header: "Data ostatniej aktualizacji",
+    sortKey: "updated_at",
     render: (dto) => formatDateTime(dto.updatedAt),
   },
   {
     header: "Data pobytu",
+    sortKey: "start_date",
     render: (dto) => `od ${dto.startDate} do ${dto.endDate}`,
   },
   {
@@ -38,6 +37,7 @@ export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
   },
   {
     header: "Status",
+    sortKey: "status",
     render: (dto) => (
       <Chip
         label={dto.reservationStatus.name}
@@ -52,6 +52,7 @@ export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
   },
   {
     header: "Źródło",
+    sortKey: "source",
     render: (dto) => dto.reservationSource.name,
   },
   {
@@ -60,6 +61,7 @@ export const commonReservationColumns: TableColumn<ReservationInfo>[] = [
   },
   {
     header: "Cena",
+    sortKey: "total_price",
     render: (dto) => `${dto.totalPrice} zł`,
   },
 ];

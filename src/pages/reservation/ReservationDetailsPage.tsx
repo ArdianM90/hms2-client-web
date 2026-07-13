@@ -12,10 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import { formatDateTime } from "../../helpers/Formatter.ts";
-import type { ReservationDetails } from "../../types/ReservationDetails.ts";
 import InfoBox from "../../components/InfoBox.tsx";
 import ReservationRoomCard from "../../components/ReservationRoomCard.tsx";
 import { InfoTextBox } from "../../components/InfoTextBox.tsx";
+import type { ReservationDetails } from "../../types/Reservation.ts";
 
 export default function ReservationDetailsPage() {
   const { reservationId } = useParams();
@@ -67,7 +67,7 @@ export default function ReservationDetailsPage() {
       >
         <Box
           sx={{
-            width: 400,
+            flex: 2,
             flexShrink: 0,
             position: "sticky",
             top: 16,
@@ -124,7 +124,7 @@ export default function ReservationDetailsPage() {
           </Card>
         </Box>
 
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ flex: 3, minWidth: 0 }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             Zarezerwowane pokoje
           </Typography>

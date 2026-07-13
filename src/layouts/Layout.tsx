@@ -9,19 +9,11 @@ import {
   Stack,
   Divider,
 } from "@mui/material";
-import { userManager } from "../auth/oidcClient";
 import { useAuth } from "../auth/AuthContext.ts";
+import { login, logout } from "../auth/auth.ts";
 
 export default function Layout() {
   const { sub, isAdmin, isEmployee, isGuest } = useAuth();
-
-  const login = async () => {
-    await userManager.signinRedirect();
-  };
-
-  const logout = async () => {
-    await userManager.signoutRedirect();
-  };
 
   return (
     <Box

@@ -16,7 +16,6 @@ import RoomCheckInForm from "./RoomCheckInForm";
 import { reservationApi } from "../api/reservationApi";
 import { dictionaryApi, DictionaryType } from "../api/dictionaryApi";
 import { ReservationStatusCode } from "../constants/reservationStatus";
-import type { ReservationDetails } from "../types/ReservationDetails";
 import type {
   CheckInRequest,
   RoomCheckInRequest,
@@ -25,6 +24,7 @@ import type {
 import type { DictionaryValue } from "../types/DictionaryValue";
 import type { AxiosErrorResponse } from "../api/apiTypes";
 import { guestsApi } from "../api/guestsApi.ts";
+import type { ReservationDetails } from "../types/Reservation.ts";
 
 const emptyGuest: GuestCheckInRequest = {
   firstName: "",

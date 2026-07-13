@@ -68,9 +68,9 @@ export default function AppRouter() {
 
               <Route element={<RoleGuard allow={(auth) => auth.isGuest} />}>
                 <Route path="reservation" element={<ReservationLayout />}>
-                  <Route index element={<Navigate to="book" replace />} />
-                  <Route path="book" element={<BookReservationPage />} />
+                  <Route index element={<Navigate to="my" replace />} />
                   <Route path="my" element={<MyReservationsPage />} />
+                  <Route path="book" element={<BookReservationPage />} />
                   <Route
                     path=":reservationId"
                     element={<ReservationDetailsPage />}

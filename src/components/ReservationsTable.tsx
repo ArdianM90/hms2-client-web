@@ -5,18 +5,25 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
 } from "@mui/material";
 import type { TableColumn } from "../types/TableColumn.ts";
 
 type Props<T> = {
   reservations: T[];
   columns: TableColumn<T>[];
+  sortBy: string;
+  sortDescending: boolean;
+  onSortChange: (key: string) => void;
   onRowClick?: (dto: T) => void;
 };
 
 export default function ReservationsTable<T extends { reservationId: number }>({
   reservations,
   columns,
+  sortBy,
+  sortDescending,
+  onSortChange,
   onRowClick,
 }: Props<T>) {
   return (
@@ -30,7 +37,19 @@ export default function ReservationsTable<T extends { reservationId: number }>({
           >
             {columns.map((col, i) => (
               <TableCell key={i} align={col.align}>
-                {col.header}
+                {col.sortKey ? (
+                  <TableSortLabel
+                    active={sortBy === col.sortKey}
+                    direction={
+                      sortBy === col.sortKey && sortDescending ? "desc" : "asc"
+                    }
+                    onClick={() => onSortChange(col.sortKey!)}
+                  >
+                    {col.header}
+                  </TableSortLabel>
+                ) : (
+                  col.header
+                )}
               </TableCell>
             ))}
           </TableRow>
@@ -38,7 +57,7 @@ export default function ReservationsTable<T extends { reservationId: number }>({
         <TableBody>
           {reservations.map((dto, index) => (
             <TableRow
-              title={"Kliknij aby zobaczyć szczegóły"}
+              title="Kliknij aby zobaczyć szczegóły"
               key={dto.reservationId}
               hover={!!onRowClick}
               onClick={() => onRowClick?.(dto)}

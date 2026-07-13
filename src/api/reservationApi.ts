@@ -2,9 +2,12 @@ import { api } from "./axios";
 import type { SearchReservationOffersRequest } from "../types/SearchReservationOffersRequest.ts";
 import type { ReservationOffer } from "../types/ReservationOffer.ts";
 import type { MakeReservationRequest } from "../types/MakeReservationRequest.ts";
-import type { ReservationInfo } from "../types/ReservationInfo.ts";
-import type { ReservationDetails } from "../types/ReservationDetails.ts";
-import type { AdminReservationInfo } from "../types/AdminReservationInfo.ts";
+import type {
+  ReservationDetails,
+  ReservationDto,
+  ReservationsFilterParams,
+} from "../types/Reservation.ts";
+import type { PageableParam, PageableResult } from "../types/Pageable.ts";
 
 export const reservationApi = {
   getReservation: (reservationId: number) =>
@@ -12,13 +15,15 @@ export const reservationApi = {
       .get<ReservationDetails>(`/api/hms/reservations/${reservationId}`)
       .then((res) => res.data),
 
-  getAllReservations: () =>
+  getReservations: (
+    filterParams?: ReservationsFilterParams,
+    pageable?: PageableParam,
+  ) =>
     api
-      .get<AdminReservationInfo[]>("/api/hms/reservations/all")
+      .get<
+        PageableResult<ReservationDto[]>
+      >("/api/hms/reservations", { params: { ...filterParams, ...pageable } })
       .then((res) => res.data),
-
-  getMyReservations: () =>
-    api.get<ReservationInfo[]>("/api/hms/reservations").then((res) => res.data),
 
   searchOffers: (request: SearchReservationOffersRequest) =>
     api
