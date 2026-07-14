@@ -32,6 +32,8 @@ import type { DictionaryValue } from "../../../types/DictionaryValue.ts";
 import type { PageableParam, PageableResult } from "../../../types/Pageable.ts";
 import { dictionaryApi, DictionaryType } from "../../../api/dictionaryApi.ts";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import { exportToPdf, exportToXlsx } from "../../../api/utils/exportUtils.ts";
+import ExportButton from "../../../components/ExportButton.tsx";
 
 export default function ManageReservationsPage() {
   const navigate = useNavigate();
@@ -62,6 +64,8 @@ export default function ManageReservationsPage() {
   const [appliedFilters, setAppliedFilters] =
     useState<ReservationsFilterParams>({});
 
+  const [exporting, setExporting] = useState(false);
+
   const loadReservations = async () => {
     setLoading(true);
     setError(null);
@@ -83,6 +87,20 @@ export default function ManageReservationsPage() {
     }
   };
 
+  async function fetchAllForExport(
+    filters: ReservationsFilterParams,
+    sortBy: string,
+    descending: boolean,
+  ): Promise<ReservationDto[]> {
+    const data = await reservationApi.getReservations(filters, {
+      page: 1,
+      pageSize: 999,
+      sortBy,
+      descending,
+    });
+    return data.results;
+  }
+
   useEffect(() => {
     dictionaryApi
       .getDictionary(DictionaryType.RESERVATION_STATUS)
@@ -103,6 +121,30 @@ export default function ManageReservationsPage() {
       setDescending(false);
     }
     setPage(0);
+  };
+
+  const handleExportPdf = async () => {
+    setExporting(true);
+    try {
+      const all = await fetchAllForExport(appliedFilters, sortBy, descending);
+      exportToPdf("Moje rezerwacje", columns, all, "rezerwacje");
+    } catch {
+      alert("Nie udało się wygenerować pliku PDF");
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleExportXlsx = async () => {
+    setExporting(true);
+    try {
+      const all = await fetchAllForExport(appliedFilters, sortBy, descending);
+      exportToXlsx(columns, all, "rezerwacje");
+    } catch {
+      alert("Nie udało się wygenerować pliku XLSX");
+    } finally {
+      setExporting(false);
+    }
   };
 
   const handleStatusChange = async (
@@ -157,6 +199,7 @@ export default function ManageReservationsPage() {
   const guestColumn: TableColumn<ReservationDto> = {
     header: "Gość",
     render: (dto) => `${dto.guestFirstName} ${dto.guestLastName}`,
+    exportValue: (dto) => `${dto.guestFirstName} ${dto.guestLastName}`,
   };
 
   const adminActionsColumn: TableColumn<ReservationDto> = {
@@ -304,22 +347,55 @@ export default function ManageReservationsPage() {
                 </Typography>
               )}
 
-              <TablePagination
-                component="div"
-                count={total}
-                page={page}
-                onPageChange={(_, newPage) => setPage(newPage)}
-                rowsPerPage={pageSize}
-                onRowsPerPageChange={(e) => {
-                  setPageSize(parseInt(e.target.value, 10));
-                  setPage(0);
+              <Box
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: 2,
                 }}
-                rowsPerPageOptions={[10, 20, 50]}
-                labelRowsPerPage="Wierszy na stronę"
-                labelDisplayedRows={({ from, to, count }) =>
-                  `${from}–${to} z ${count}`
-                }
-              />
+              >
+                <ExportButton
+                  onExportPdf={() => void handleExportPdf()}
+                  onExportXlsx={() => void handleExportXlsx()}
+                  disabled={exporting || reservations.length === 0}
+                />
+
+                <TablePagination
+                  component="div"
+                  count={total}
+                  page={page}
+                  onPageChange={(_, newPage) => setPage(newPage)}
+                  rowsPerPage={pageSize}
+                  onRowsPerPageChange={(e) => {
+                    setPageSize(parseInt(e.target.value, 10));
+                    setPage(0);
+                  }}
+                  rowsPerPageOptions={[10, 20, 50]}
+                  labelRowsPerPage="Wierszy"
+                  labelDisplayedRows={({ from, to, count }) =>
+                    `${from}–${to} z ${count}`
+                  }
+                  sx={{
+                    "& .MuiTablePagination-toolbar": {
+                      minHeight: 48,
+                      paddingRight: 0,
+                    },
+                    "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
+                      {
+                        fontWeight: 500,
+                      },
+                    "& .MuiIconButton-root": {
+                      color: "#6b1020",
+                    },
+                    "& .MuiTablePagination-actions": {
+                      marginLeft: 1,
+                    },
+                  }}
+                />
+              </Box>
             </>
           )}
         </CardContent>

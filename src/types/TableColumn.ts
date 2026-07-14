@@ -3,4 +3,5 @@ export type TableColumn<T> = {
   render: (dto: T, index: number) => React.ReactNode;
   align?: "left" | "right" | "center";
   sortKey?: string;
+  exportValue?: (dto: T) => string | number;
 };

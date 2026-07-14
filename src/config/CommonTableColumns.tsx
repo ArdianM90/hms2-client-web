@@ -20,20 +20,24 @@ export const commonReservationColumns: TableColumn<ReservationDto>[] = [
     header: "Data utworzenia",
     sortKey: "created_at",
     render: (dto) => formatDateTime(dto.createdAt),
+    exportValue: (dto) => formatDateTime(dto.createdAt),
   },
   {
     header: "Data ostatniej aktualizacji",
     sortKey: "updated_at",
     render: (dto) => formatDateTime(dto.updatedAt),
+    exportValue: (dto) => (dto.updatedAt ? formatDateTime(dto.updatedAt) : "—"),
   },
   {
     header: "Data pobytu",
     sortKey: "start_date",
     render: (dto) => `od ${dto.startDate} do ${dto.endDate}`,
+    exportValue: (dto) => `od ${dto.startDate} do ${dto.endDate}`,
   },
   {
     header: "Doby hotelowe",
     render: (dto) => dto.daysQty,
+    exportValue: (dto) => dto.daysQty,
   },
   {
     header: "Status",
@@ -49,20 +53,24 @@ export const commonReservationColumns: TableColumn<ReservationDto>[] = [
         }}
       />
     ),
+    exportValue: (dto) => dto.reservationStatus.name,
   },
   {
     header: "Źródło",
     sortKey: "source",
     render: (dto) => dto.reservationSource.name,
+    exportValue: (dto) => dto.reservationSource.name,
   },
   {
     header: "Pokoje",
     render: (dto) => dto.roomsQty,
+    exportValue: (dto) => dto.roomsQty,
   },
   {
     header: "Cena",
     sortKey: "total_price",
     render: (dto) => `${dto.totalPrice} zł`,
+    exportValue: (dto) => `${dto.totalPrice} zł`,
   },
 ];
 
