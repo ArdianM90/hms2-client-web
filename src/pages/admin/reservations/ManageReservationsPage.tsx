@@ -32,7 +32,11 @@ import type { DictionaryValue } from "../../../types/DictionaryValue.ts";
 import type { PageableParam, PageableResult } from "../../../types/Pageable.ts";
 import { dictionaryApi, DictionaryType } from "../../../api/dictionaryApi.ts";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { exportToPdf, exportToXlsx } from "../../../api/utils/exportUtils.ts";
+import {
+  createExportPageable,
+  exportToPdf,
+  exportToXlsx,
+} from "../../../api/utils/exportUtils.ts";
 import ExportButton from "../../../components/ExportButton.tsx";
 
 export default function ManageReservationsPage() {
@@ -66,18 +70,23 @@ export default function ManageReservationsPage() {
 
   const [exporting, setExporting] = useState(false);
 
+  async function fetchReservations(
+    pageable: PageableParam,
+  ): Promise<PageableResult<ReservationDto[]>> {
+    return reservationApi.getReservations(appliedFilters, pageable);
+  }
+
   const loadReservations = async () => {
     setLoading(true);
     setError(null);
+
     try {
-      const pageable: PageableParam = {
+      const data = await fetchReservations({
         page: page + 1,
         pageSize,
         sortBy,
         descending,
-      };
-      const data: PageableResult<ReservationDto[]> =
-        await reservationApi.getReservations(appliedFilters, pageable);
+      });
       setReservations(data.results);
       setTotal(data.total);
     } catch {
@@ -86,20 +95,6 @@ export default function ManageReservationsPage() {
       setLoading(false);
     }
   };
-
-  async function fetchAllForExport(
-    filters: ReservationsFilterParams,
-    sortBy: string,
-    descending: boolean,
-  ): Promise<ReservationDto[]> {
-    const data = await reservationApi.getReservations(filters, {
-      page: 1,
-      pageSize: 999,
-      sortBy,
-      descending,
-    });
-    return data.results;
-  }
 
   useEffect(() => {
     dictionaryApi
@@ -125,11 +120,11 @@ export default function ManageReservationsPage() {
 
   const handleExportPdf = async () => {
     setExporting(true);
+
     try {
-      const all = await fetchAllForExport(appliedFilters, sortBy, descending);
-      exportToPdf("Moje rezerwacje", columns, all, "rezerwacje");
-    } catch {
-      alert("Nie udało się wygenerować pliku PDF");
+      const pageable: PageableParam = createExportPageable(sortBy, descending);
+      const { results } = await fetchReservations(pageable);
+      exportToPdf("Rezerwacje", columns, results, "rezerwacje");
     } finally {
       setExporting(false);
     }
@@ -137,11 +132,11 @@ export default function ManageReservationsPage() {
 
   const handleExportXlsx = async () => {
     setExporting(true);
+
     try {
-      const all = await fetchAllForExport(appliedFilters, sortBy, descending);
-      exportToXlsx(columns, all, "rezerwacje");
-    } catch {
-      alert("Nie udało się wygenerować pliku XLSX");
+      const pageable: PageableParam = createExportPageable(sortBy, descending);
+      const { results } = await fetchReservations(pageable);
+      exportToXlsx(columns, results, "rezerwacje");
     } finally {
       setExporting(false);
     }

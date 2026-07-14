@@ -91,27 +91,33 @@ export const commonTaskColumns: TableColumn<TaskListItem>[] = [
         />
       );
     },
+    exportValue: (dto) => `${dto.taskType.name}`,
   },
   {
     header: "Tytuł",
     sortKey: "title",
     render: (dto) => dto.title,
+    exportValue: (dto) => `${dto.title}`,
   },
   {
     header: "Pokój",
     sortKey: "room_number",
     render: (dto) => (dto.roomNumber ? `nr ${dto.roomNumber}` : "—"),
+    exportValue: (dto) => `${dto.roomNumber ? `nr ${dto.roomNumber}` : "—"}`,
   },
   {
     header: "Priorytet",
     sortKey: "priority",
     render: (dto) => dto.priority,
+    exportValue: (dto) => `${dto.priority}`,
   },
   {
     header: "Termin",
     sortKey: "dueAt",
     render: (dto) =>
       dto.dueAt ? new Date(dto.dueAt).toLocaleString("pl-PL") : "—",
+    exportValue: (dto) =>
+      `${dto.dueAt ? new Date(dto.dueAt).toLocaleString("pl-PL") : "—"}`,
   },
   {
     header: "Status",
@@ -130,5 +136,6 @@ export const commonTaskColumns: TableColumn<TaskListItem>[] = [
         />
       );
     },
+    exportValue: (dto) => `${dto.status.name}`,
   },
 ];

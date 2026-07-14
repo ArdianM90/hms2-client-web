@@ -3,6 +3,7 @@ import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { ROBOTO_REGULAR_BASE64 } from "../../assets/fonts/robotoFont";
 import type { TableColumn } from "../../types/TableColumn.ts";
+import type { PageableParam } from "../../types/Pageable.ts";
 
 function registerPolishFont(doc: jsPDF) {
   doc.addFileToVFS("Roboto-Regular.ttf", ROBOTO_REGULAR_BASE64);
@@ -49,4 +50,16 @@ export function exportToXlsx<T>(
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Dane");
   XLSX.writeFile(wb, `${fileName}.xlsx`);
+}
+
+export function createExportPageable(
+  sortBy: string,
+  descending: boolean,
+): PageableParam {
+  return {
+    page: 1,
+    pageSize: 999,
+    sortBy,
+    descending,
+  };
 }

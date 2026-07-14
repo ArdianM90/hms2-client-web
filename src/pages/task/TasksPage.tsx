@@ -28,6 +28,12 @@ import { commonTaskColumns } from "../../config/CommonTableColumns.tsx";
 import TasksTable from "../../components/TasksTable.tsx";
 import type { PageableParam, PageableResult } from "../../types/Pageable.ts";
 import { useAuth } from "../../auth/AuthContext.ts";
+import {
+  createExportPageable,
+  exportToPdf,
+  exportToXlsx,
+} from "../../api/utils/exportUtils.ts";
+import ExportButton from "../../components/ExportButton.tsx";
 
 export default function TasksPage() {
   const navigate = useNavigate();
@@ -55,20 +61,25 @@ export default function TasksPage() {
   const [dueTo, setDueTo] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<TasksFilterParams>({});
 
+  const [exporting, setExporting] = useState(false);
+
+  async function fetchTasks(
+    pageable: PageableParam,
+  ): Promise<PageableResult<TaskListItem[]>> {
+    return taskApi.getTasks(appliedFilters, pageable);
+  }
+
   const loadTasks = async () => {
     setLoading(true);
     setError(null);
+
     try {
-      const pageable: PageableParam = {
+      const data = await fetchTasks({
         page: page + 1,
         pageSize,
         sortBy,
         descending,
-      };
-      const data: PageableResult<TaskListItem[]> = await taskApi.getTasks(
-        appliedFilters,
-        pageable,
-      );
+      });
       setTasks(data.results);
       setTotal(data.total);
     } catch {
@@ -110,6 +121,30 @@ export default function TasksPage() {
         t.employeeTaskId === employeeTaskId ? { ...t, status, ...extra } : t,
       ),
     );
+  };
+
+  const handleExportPdf = async () => {
+    setExporting(true);
+
+    try {
+      const pageable: PageableParam = createExportPageable(sortBy, descending);
+      const { results } = await fetchTasks(pageable);
+      exportToPdf("Lista zadań", columns, results, "zadania");
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleExportXlsx = async () => {
+    setExporting(true);
+
+    try {
+      const pageable: PageableParam = createExportPageable(sortBy, descending);
+      const { results } = await fetchTasks(pageable);
+      exportToXlsx(columns, results, "zadania");
+    } finally {
+      setExporting(false);
+    }
   };
 
   const handleStart = async (employeeTaskId: number) => {
@@ -173,6 +208,7 @@ export default function TasksPage() {
   const assigneeColumn: TableColumn<TaskListItem> = {
     header: "Pracownik",
     render: (dto) => `${dto.assigneeFirstName} ${dto.assigneeLastName}`,
+    exportValue: (dto) => `${dto.assigneeFirstName} ${dto.assigneeLastName}`,
   };
 
   const actionsColumn: TableColumn<TaskListItem> = {
@@ -348,22 +384,55 @@ export default function TasksPage() {
                 </Typography>
               )}
 
-              <TablePagination
-                component="div"
-                count={total}
-                page={page}
-                onPageChange={(_, newPage) => setPage(newPage)}
-                rowsPerPage={pageSize}
-                onRowsPerPageChange={(e) => {
-                  setPageSize(parseInt(e.target.value, 10));
-                  setPage(0);
+              <Box
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: 2,
                 }}
-                rowsPerPageOptions={[10, 20, 50]}
-                labelRowsPerPage="Wierszy na stronę"
-                labelDisplayedRows={({ from, to, count }) =>
-                  `${from}–${to} z ${count}`
-                }
-              />
+              >
+                <ExportButton
+                  onExportPdf={() => void handleExportPdf()}
+                  onExportXlsx={() => void handleExportXlsx()}
+                  disabled={exporting || tasks.length === 0}
+                />
+
+                <TablePagination
+                  component="div"
+                  count={total}
+                  page={page}
+                  onPageChange={(_, newPage) => setPage(newPage)}
+                  rowsPerPage={pageSize}
+                  onRowsPerPageChange={(e) => {
+                    setPageSize(parseInt(e.target.value, 10));
+                    setPage(0);
+                  }}
+                  rowsPerPageOptions={[10, 20, 50]}
+                  labelRowsPerPage="Wierszy"
+                  labelDisplayedRows={({ from, to, count }) =>
+                    `${from}–${to} z ${count}`
+                  }
+                  sx={{
+                    "& .MuiTablePagination-toolbar": {
+                      minHeight: 48,
+                      paddingRight: 0,
+                    },
+                    "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
+                      {
+                        fontWeight: 500,
+                      },
+                    "& .MuiIconButton-root": {
+                      color: "#6b1020",
+                    },
+                    "& .MuiTablePagination-actions": {
+                      marginLeft: 1,
+                    },
+                  }}
+                />
+              </Box>
             </>
           )}
         </CardContent>
