@@ -252,7 +252,7 @@ export default function TasksPage() {
   const columns: TableColumn<TaskListItem>[] = [
     ...(isAdmin ? [assigneeColumn] : []),
     ...commonTaskColumns,
-    actionsColumn,
+    ...(!isAdmin ? [actionsColumn] : []),
   ];
 
   if (error) {

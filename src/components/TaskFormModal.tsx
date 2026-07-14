@@ -18,9 +18,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { taskApi } from "../api/taskApi";
 import { useCurrentUserId } from "../hooks/useCurrentUserId";
-import { type AddTaskRequest, TaskType } from "../types/Task.ts";
+import { type AddTaskRequest } from "../types/Task.ts";
 import type { RoomSimple } from "../types/Room.ts";
 import { roomApi } from "../api/roomApi.ts";
+import { dictionaryApi, DictionaryType } from "../api/dictionaryApi.ts";
+import type { DictionaryValue } from "../types/DictionaryValue.ts";
 
 type AxiosErrorResponse = {
   response?: { data?: { message?: string } };
@@ -32,6 +34,7 @@ const emptyForm = {
   roomId: "",
   priority: 2,
   dueAt: "",
+  taskTypeCode: "room_service",
 };
 
 type Props = {
@@ -51,18 +54,27 @@ export default function TaskFormModal({
 }: Props) {
   const createdByUserId = useCurrentUserId();
   const [rooms, setRooms] = useState<RoomSimple[]>([]);
+  const [taskTypes, setTaskTypes] = useState<DictionaryValue[]>([]);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isValid = form.title.trim() !== "" && createdByUserId !== null;
+  const isValid =
+    form.title.trim() !== "" &&
+    form.taskTypeCode !== "" &&
+    createdByUserId !== null;
 
   useEffect(() => {
     if (open) {
-      roomApi
-        .getRoomsSimple()
-        .then(setRooms)
-        .catch(() => setError("Nie udało się pobrać listy pokojów"));
+      Promise.all([
+        roomApi.getRoomsSimple(),
+        dictionaryApi.getDictionary(DictionaryType.EMPLOYEE_TASK),
+      ])
+        .then(([rooms, taskTypes]) => {
+          setRooms(rooms);
+          setTaskTypes(taskTypes);
+        })
+        .catch(() => setError("Nie udało się pobrać danych formularza"));
     }
   }, [open]);
 
@@ -78,7 +90,7 @@ export default function TaskFormModal({
     const request: AddTaskRequest = {
       assigneeUserId,
       createdByUserId,
-      taskTypeCode: TaskType.PREPARE_ROOM,
+      taskTypeCode: form.taskTypeCode,
       title: form.title,
       description: form.description || null,
       priority: form.priority,
@@ -148,6 +160,27 @@ export default function TaskFormModal({
             multiline
             minRows={2}
           />
+
+          <FormControl fullWidth required>
+            <InputLabel>Rodzaj zadania</InputLabel>
+            <Select
+              label="Rodzaj zadania"
+              value={form.taskTypeCode}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  taskTypeCode: e.target.value,
+                })
+              }
+            >
+              {taskTypes.map((taskType) => (
+                <MenuItem key={taskType.code} value={taskType.code}>
+                  {taskType.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <FormControl fullWidth>
             <InputLabel>Pokój</InputLabel>
             <Select
@@ -168,6 +201,7 @@ export default function TaskFormModal({
               ))}
             </Select>
           </FormControl>
+
           <FormControl fullWidth>
             <InputLabel>Priorytet</InputLabel>
             <Select
@@ -182,6 +216,7 @@ export default function TaskFormModal({
               <MenuItem value={3}>Wysoki</MenuItem>
             </Select>
           </FormControl>
+
           <TextField
             label="Termin"
             type="datetime-local"

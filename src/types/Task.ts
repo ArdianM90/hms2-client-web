@@ -1,16 +1,12 @@
 import type { DictionaryValue } from "./DictionaryValue.ts";
 
-export const TaskType = {
-  PREPARE_ROOM: "prepare_room",
-} as const;
-export type TaskType = (typeof TaskType)[keyof typeof TaskType];
-
 export const TaskStatus = {
   ASSIGNED: "assigned",
   IN_PROGRESS: "in_progress",
   COMPLETED: "completed",
   CANCELLED: "cancelled",
 } as const;
+
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
 
 export type TaskListItem = {
@@ -39,7 +35,7 @@ export type AddTaskRequest = {
   createdByUserId: string;
   roomId?: number | null;
   reservationId?: number | null;
-  taskTypeCode: TaskType;
+  taskTypeCode: string;
   title: string;
   description?: string | null;
   priority?: number;
