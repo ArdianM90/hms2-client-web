@@ -14,3 +14,9 @@ export interface EmployeeRequest {
   roleCode: string;
   positionCodes: string[];
 }
+
+export interface EmployeesFilterParams {
+  query?: string;
+  roleCode?: string;
+  positionCodes?: string[];
+}

@@ -1,10 +1,19 @@
 import { api } from "./axios.ts";
-import type { EmployeeListItem, EmployeeRequest } from "../types/Employee.ts";
+import type {
+  EmployeeListItem,
+  EmployeeRequest,
+  EmployeesFilterParams,
+} from "../types/Employee.ts";
 import type { LabeledValue } from "./LabeledValue.ts";
+import type { PageableParam, PageableResult } from "../types/Pageable.ts";
 
 export const employeeApi = {
-  getEmployees: () =>
-    api.get<EmployeeListItem[]>("/api/hms/employees").then((res) => res.data),
+  getEmployees: (filters: EmployeesFilterParams, pageable: PageableParam) =>
+    api
+      .get<PageableResult<EmployeeListItem[]>>("/api/hms/employees", {
+        params: { ...filters, ...pageable },
+      })
+      .then((res) => res.data),
 
   addEmployee: (request: EmployeeRequest) =>
     api
