@@ -21,8 +21,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { dictionaryApi, DictionaryType } from "../api/dictionaryApi";
-import { employeeApi } from "../api/employeeApi";
-import type { EmployeeListItem, EmployeeRequest } from "../types/Employee.ts";
+import { appUsersApi } from "../api/appUsersApi.ts";
+import type { AppUserListItem, EmployeeRequest } from "../types/AppUser.ts";
 import type { DictionaryValue } from "../types/DictionaryValue.ts";
 
 type AxiosErrorResponse = {
@@ -39,12 +39,12 @@ const emptyForm: EmployeeRequest = {
 
 type Props = {
   open: boolean;
-  employee: EmployeeListItem | null;
+  employee: AppUserListItem | null;
   onClose: () => void;
   onSuccess: () => void;
 };
 
-export default function EmployeeFormModal({
+export default function AppUserFormModal({
   open,
   employee,
   onClose,
@@ -121,9 +121,9 @@ export default function EmployeeFormModal({
 
     try {
       if (isEditMode) {
-        await employeeApi.updateEmployee(employee.userId, form);
+        await appUsersApi.updateAppUser(employee.userId, form);
       } else {
-        await employeeApi.addEmployee(form);
+        await appUsersApi.addAppUser(form);
       }
       onSuccess();
       onClose();

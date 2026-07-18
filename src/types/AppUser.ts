@@ -1,4 +1,4 @@
-export interface EmployeeListItem {
+export interface AppUserListItem {
   userId: string;
   email: string;
   firstName: string;
@@ -15,7 +15,7 @@ export interface EmployeeRequest {
   positionCodes: string[];
 }
 
-export interface EmployeesFilterParams {
+export interface UsersFilterParams {
   query?: string;
   roleCode?: string;
   positionCodes?: string[];

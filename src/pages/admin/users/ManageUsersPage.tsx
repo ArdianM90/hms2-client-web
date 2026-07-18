@@ -26,13 +26,13 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import { employeeApi } from "../../../api/employeeApi.ts";
+import { appUsersApi } from "../../../api/appUsersApi.ts";
 import { dictionaryApi, DictionaryType } from "../../../api/dictionaryApi.ts";
-import EmployeeFormModal from "../../../components/EmployeeFormModal.tsx";
+import AppUserFormModal from "../../../components/AppUserFormModal.tsx";
 import type {
-  EmployeeListItem,
-  EmployeesFilterParams,
-} from "../../../types/Employee.ts";
+  AppUserListItem,
+  UsersFilterParams,
+} from "../../../types/AppUser.ts";
 import type { DictionaryValue } from "../../../types/DictionaryValue.ts";
 import { useNavigate } from "react-router-dom";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -43,7 +43,7 @@ const DEFAULT_PAGE_SIZE = 10;
 
 export default function ManageUsersPage() {
   const navigate = useNavigate();
-  const [employees, setEmployees] = useState<EmployeeListItem[]>([]);
+  const [appUsers, setAppUsers] = useState<AppUserListItem[]>([]);
   const [total, setTotal] = useState(0);
   const [roles, setRoles] = useState<DictionaryValue[]>([]);
   const [positions, setPositions] = useState<DictionaryValue[]>([]);
@@ -51,8 +51,9 @@ export default function ManageUsersPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingEmployee, setEditingEmployee] =
-    useState<EmployeeListItem | null>(null);
+  const [editingAppUser, setEditingAppUser] = useState<AppUserListItem | null>(
+    null,
+  );
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
@@ -67,9 +68,7 @@ export default function ManageUsersPage() {
   const [selectedPositions, setSelectedPositions] = useState<DictionaryValue[]>(
     [],
   );
-  const [appliedFilters, setAppliedFilters] = useState<EmployeesFilterParams>(
-    {},
-  );
+  const [appliedFilters, setAppliedFilters] = useState<UsersFilterParams>({});
 
   const roleLabel = (code: string) =>
     roles.find((r) => r.code === code)?.name ?? code;
@@ -77,7 +76,7 @@ export default function ManageUsersPage() {
   const positionLabel = (code: string) =>
     positions.find((p) => p.code === code)?.name ?? code;
 
-  const loadEmployees = async () => {
+  const loadAppUsers = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -87,8 +86,8 @@ export default function ManageUsersPage() {
         sortBy,
         descending,
       };
-      const data = await employeeApi.getEmployees(appliedFilters, pageable);
-      setEmployees(data.results);
+      const data = await appUsersApi.getAppUsers(appliedFilters, pageable);
+      setAppUsers(data.results);
       setTotal(data.total);
     } catch {
       setError("Nie udało się pobrać listy pracowników");
@@ -109,7 +108,7 @@ export default function ManageUsersPage() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    void loadEmployees();
+    void loadAppUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, pageSize, sortBy, descending, appliedFilters]);
 
@@ -148,24 +147,24 @@ export default function ManageUsersPage() {
     (appliedFilters.positionCodes?.length ? 1 : 0);
 
   const handleAddClick = () => {
-    setEditingEmployee(null);
+    setEditingAppUser(null);
     setModalOpen(true);
   };
 
-  const handleEditClick = (employee: EmployeeListItem) => {
-    setEditingEmployee(employee);
+  const handleEditClick = (appUser: AppUserListItem) => {
+    setEditingAppUser(appUser);
     setModalOpen(true);
   };
 
-  const handleDeleteClick = async (employee: EmployeeListItem) => {
+  const handleDeleteClick = async (appUser: AppUserListItem) => {
     const confirmed = window.confirm(
-      `Czy na pewno usunąć pracownika ${employee.firstName} ${employee.lastName}?`,
+      `Czy na pewno usunąć pracownika ${appUser.firstName} ${appUser.lastName}?`,
     );
     if (!confirmed) return;
 
     try {
-      await employeeApi.deleteEmployee(employee.userId);
-      void loadEmployees();
+      await appUsersApi.deleteAppUser(appUser.userId);
+      void loadAppUsers();
     } catch {
       alert("Nie udało się usunąć pracownika");
     }
@@ -355,19 +354,19 @@ export default function ManageUsersPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {employees.map((employee) => (
-                      <TableRow key={employee.userId} hover>
-                        <TableCell>{employee.email}</TableCell>
-                        <TableCell>{employee.firstName}</TableCell>
-                        <TableCell>{employee.lastName}</TableCell>
+                    {appUsers.map((appUser) => (
+                      <TableRow key={appUser.userId} hover>
+                        <TableCell>{appUser.email}</TableCell>
+                        <TableCell>{appUser.firstName}</TableCell>
+                        <TableCell>{appUser.lastName}</TableCell>
                         <TableCell sx={{ fontWeight: 700, color: "#6b1020" }}>
-                          {roleLabel(employee.roleCode)}
+                          {roleLabel(appUser.roleCode)}
                         </TableCell>
                         <TableCell>
                           <Box
                             sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
                           >
-                            {employee.positionCodes.map((code) => (
+                            {appUser.positionCodes.map((code) => (
                               <Chip
                                 key={code}
                                 label={positionLabel(code)}
@@ -388,7 +387,7 @@ export default function ManageUsersPage() {
                           <Tooltip title="Edytuj pracownika">
                             <IconButton
                               size="medium"
-                              onClick={() => handleEditClick(employee)}
+                              onClick={() => handleEditClick(appUser)}
                             >
                               <EditIcon
                                 fontSize="medium"
@@ -396,16 +395,16 @@ export default function ManageUsersPage() {
                               />
                             </IconButton>
                           </Tooltip>
-                          {employee.roleCode === "EMPLOYEE" && (
+                          {["admin", "employee"].includes(appUser.roleCode) && (
                             <Tooltip title="Zobacz przydzielone zadania">
                               <IconButton
                                 size="medium"
                                 onClick={() =>
                                   navigate(
-                                    `/admin/users/${employee.userId}/tasks`,
+                                    `/admin/users/${appUser.userId}/tasks`,
                                     {
                                       state: {
-                                        assigneeName: `${employee.firstName} ${employee.lastName}`,
+                                        assigneeName: `${appUser.firstName} ${appUser.lastName}`,
                                       },
                                     },
                                   )
@@ -421,7 +420,7 @@ export default function ManageUsersPage() {
                           <Tooltip title="Usuń pracownika">
                             <IconButton
                               size="medium"
-                              onClick={() => handleDeleteClick(employee)}
+                              onClick={() => handleDeleteClick(appUser)}
                             >
                               <DeleteIcon
                                 fontSize="medium"
@@ -436,7 +435,7 @@ export default function ManageUsersPage() {
                 </Table>
               </TableContainer>
 
-              {employees.length === 0 && (
+              {appUsers.length === 0 && (
                 <Typography sx={{ mt: 2, color: "text.secondary" }}>
                   Brak pracowników
                 </Typography>
@@ -473,11 +472,11 @@ export default function ManageUsersPage() {
         </CardContent>
       </Card>
 
-      <EmployeeFormModal
+      <AppUserFormModal
         open={modalOpen}
-        employee={editingEmployee}
+        employee={editingAppUser}
         onClose={() => setModalOpen(false)}
-        onSuccess={loadEmployees}
+        onSuccess={loadAppUsers}
       />
     </Box>
   );
