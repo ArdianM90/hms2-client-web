@@ -48,6 +48,7 @@ export type UpdateStatusRequest = {
 };
 
 export type TasksFilterParams = {
+  appUserId?: string,
   query?: string;
   taskTypeCodes?: string[];
   dueFrom?: string;

@@ -65,7 +65,9 @@ export default function ManageTasksPage() {
   );
   const [dueFrom, setDueFrom] = useState<string>("");
   const [dueTo, setDueTo] = useState<string>("");
-  const [appliedFilters, setAppliedFilters] = useState<TasksFilterParams>({});
+  const [appliedFilters, setAppliedFilters] = useState<TasksFilterParams>({
+    appUserId: userId,
+  });
 
   const [exporting, setExporting] = useState(false);
 
@@ -145,6 +147,7 @@ export default function ManageTasksPage() {
   const applyFilters = () => {
     setPage(0);
     setAppliedFilters({
+      appUserId: userId,
       taskTypeCodes: selectedTaskTypes.length
         ? selectedTaskTypes.map((t) => t.code)
         : undefined,
@@ -158,7 +161,7 @@ export default function ManageTasksPage() {
     setDueFrom("");
     setDueTo("");
     setPage(0);
-    setAppliedFilters({});
+    setAppliedFilters({ appUserId: userId });
   };
 
   const activeFilterCount =
