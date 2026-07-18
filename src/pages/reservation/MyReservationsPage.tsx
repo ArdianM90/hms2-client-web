@@ -269,7 +269,7 @@ export default function MyReservationsPage() {
                 <TextField
                   size="small"
                   type="date"
-                  label="Utworzono od"
+                  label="Data pobytu od"
                   slotProps={{ inputLabel: { shrink: true } }}
                   value={createdFrom}
                   onChange={(e) => setCreatedFrom(e.target.value)}
@@ -277,7 +277,7 @@ export default function MyReservationsPage() {
                 <TextField
                   size="small"
                   type="date"
-                  label="Utworzono do"
+                  label="Data pobytu do"
                   slotProps={{ inputLabel: { shrink: true } }}
                   value={createdTo}
                   onChange={(e) => setCreatedTo(e.target.value)}
