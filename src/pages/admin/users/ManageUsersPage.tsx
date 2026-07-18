@@ -185,14 +185,14 @@ export default function ManageUsersPage() {
           mb: 3,
         }}
       >
-        <Typography variant="h4">Pracownicy</Typography>
+        <Typography variant="h4">Użytkownicy HMS</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           sx={{ bgcolor: "#6b1020", "&:hover": { bgcolor: "#87182b" } }}
           onClick={handleAddClick}
         >
-          Dodaj pracownika
+          Dodaj użytkownika
         </Button>
       </Box>
 
@@ -396,26 +396,28 @@ export default function ManageUsersPage() {
                               />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Zobacz przydzielone zadania">
-                            <IconButton
-                              size="medium"
-                              onClick={() =>
-                                navigate(
-                                  `/admin/users/${employee.userId}/tasks`,
-                                  {
-                                    state: {
-                                      assigneeName: `${employee.firstName} ${employee.lastName}`,
+                          {employee.roleCode === "EMPLOYEE" && (
+                            <Tooltip title="Zobacz przydzielone zadania">
+                              <IconButton
+                                size="medium"
+                                onClick={() =>
+                                  navigate(
+                                    `/admin/users/${employee.userId}/tasks`,
+                                    {
+                                      state: {
+                                        assigneeName: `${employee.firstName} ${employee.lastName}`,
+                                      },
                                     },
-                                  },
-                                )
-                              }
-                            >
-                              <AssignmentIcon
-                                fontSize="medium"
-                                sx={{ color: "#6b1020" }}
-                              />
-                            </IconButton>
-                          </Tooltip>
+                                  )
+                                }
+                              >
+                                <AssignmentIcon
+                                  fontSize="medium"
+                                  sx={{ color: "#6b1020" }}
+                                />
+                              </IconButton>
+                            </Tooltip>
+                          )}
                           <Tooltip title="Usuń pracownika">
                             <IconButton
                               size="medium"

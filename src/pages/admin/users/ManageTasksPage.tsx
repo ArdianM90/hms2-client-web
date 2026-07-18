@@ -9,12 +9,12 @@ import {
   Button,
   CircularProgress,
   Alert,
-  IconButton,
   Stack,
   Collapse,
   TextField,
   Autocomplete,
   TablePagination,
+  IconButton,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -177,8 +177,19 @@ export default function ManageTasksPage() {
 
   return (
     <Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-        <IconButton onClick={() => navigate(-1)} size="small">
+      <Box sx={{ display: "flex", alignItems: "center", gap: 3, mb: 1 }}>
+        <IconButton
+          onClick={() => navigate(-1)}
+          sx={{
+            bgcolor: "#6b1020",
+            color: "white",
+            width: 42,
+            height: 42,
+            "&:hover": {
+              bgcolor: "#87182b",
+            },
+          }}
+        >
           <ArrowBackIcon />
         </IconButton>
         <Typography variant="h4">Zadania — {assigneeName}</Typography>
