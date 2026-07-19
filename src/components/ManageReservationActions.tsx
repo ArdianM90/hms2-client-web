@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { ReservationStatusCode } from "../constants/reservationStatus.ts";
 import CheckInModal from "./CheckInModal.tsx";
 import { useState } from "react";
@@ -18,15 +18,31 @@ export default function ManageReservationActions({
 
   if (code === ReservationStatusCode.CREATED) {
     return (
-      <Button
-        variant="contained"
-        sx={{ bgcolor: "#6b1020" }}
-        onClick={() =>
-          onStatusChange(dto.reservationId, ReservationStatusCode.CONFIRMED)
-        }
-      >
-        Potwierdź
-      </Button>
+      <Stack direction="row" spacing={1}>
+        <Button
+          variant="contained"
+          sx={{
+            bgcolor: "#6b1020",
+            "&:hover": { bgcolor: "#87182b" },
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onStatusChange(dto.reservationId, ReservationStatusCode.CONFIRMED);
+          }}
+        >
+          Potwierdź
+        </Button>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={(e) => {
+            e.stopPropagation();
+            onStatusChange(dto.reservationId, ReservationStatusCode.CANCELLED);
+          }}
+        >
+          Anuluj
+        </Button>
+      </Stack>
     );
   }
   if (code === ReservationStatusCode.CONFIRMED) {

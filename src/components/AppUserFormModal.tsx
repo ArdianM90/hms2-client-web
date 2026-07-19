@@ -212,7 +212,7 @@ export default function AppUserFormModal({
               </Select>
             </FormControl>
 
-            <FormControl fullWidth disabled={(form.roleCode === "guest")}>
+            <FormControl fullWidth disabled={form.roleCode === "guest"}>
               <InputLabel>Stanowiska</InputLabel>
               <Select
                 label="Stanowiska"

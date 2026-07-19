@@ -37,7 +37,7 @@ import {
   exportToXlsx,
 } from "../../api/utils/exportUtils.ts";
 import ExportButton from "../../components/ExportButton.tsx";
-import {useAuth} from "../../auth/AuthContext.ts";
+import { useAuth } from "../../auth/AuthContext.ts";
 
 const DEFAULT_PAGE_SIZE = 10;
 

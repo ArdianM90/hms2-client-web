@@ -22,6 +22,10 @@ import {
   TextField,
   Autocomplete,
   TablePagination,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -36,8 +40,9 @@ import type {
 import type { DictionaryValue } from "../../../types/DictionaryValue.ts";
 import { useNavigate } from "react-router-dom";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import type { PageableParam } from "../../../types/Pageable.ts";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import WarningIcon from "@mui/icons-material/Warning";
+import type { PageableParam } from "../../../types/Pageable.ts";
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -49,6 +54,10 @@ export default function ManageUsersPage() {
   const [positions, setPositions] = useState<DictionaryValue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [appUserToDelete, setAppUserToDelete] =
+    useState<AppUserListItem | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingAppUser, setEditingAppUser] = useState<AppUserListItem | null>(
@@ -156,18 +165,27 @@ export default function ManageUsersPage() {
     setModalOpen(true);
   };
 
-  const handleDeleteClick = async (appUser: AppUserListItem) => {
-    const confirmed = window.confirm(
-      `Czy na pewno usunąć pracownika ${appUser.firstName} ${appUser.lastName}?`,
-    );
-    if (!confirmed) return;
+  const handleDeleteClick = (appUser: AppUserListItem) => {
+    setAppUserToDelete(appUser);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!appUserToDelete) return;
 
     try {
-      await appUsersApi.deleteAppUser(appUser.userId);
+      await appUsersApi.deleteAppUser(appUserToDelete.userId);
+      setDeleteDialogOpen(false);
+      setAppUserToDelete(null);
       void loadAppUsers();
     } catch {
       alert("Nie udało się usunąć pracownika");
     }
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setAppUserToDelete(null);
   };
 
   if (error) {
@@ -478,6 +496,63 @@ export default function ManageUsersPage() {
         onClose={() => setModalOpen(false)}
         onSuccess={loadAppUsers}
       />
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={closeDeleteDialog}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            bgcolor: "#6b1020",
+            color: "white",
+            fontWeight: 700,
+          }}
+        >
+          Usuń pracownika
+        </DialogTitle>
+
+        <DialogContent sx={{ pt: "20px !important" }}>
+          <Stack direction="row" spacing={2} sx={{ alignItems: "flex-start" }}>
+            <WarningIcon
+              sx={{
+                color: "#f9a825",
+                fontSize: 36,
+              }}
+            />
+            <Typography>
+              Czy na pewno chcesz usunąć pracownika{" "}
+              <Box
+                component="span"
+                sx={{
+                  fontWeight: 700,
+                  color: "#6b1020",
+                }}
+              >
+                {appUserToDelete?.firstName} {appUserToDelete?.lastName}
+              </Box>
+              ?
+            </Typography>
+          </Stack>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={closeDeleteDialog}>Anuluj</Button>
+          <Button
+            variant="contained"
+            onClick={confirmDelete}
+            sx={{
+              bgcolor: "#6b1020",
+              "&:hover": {
+                bgcolor: "#87182b",
+              },
+            }}
+          >
+            Usuń
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
