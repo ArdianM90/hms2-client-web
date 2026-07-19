@@ -37,11 +37,13 @@ import {
   exportToXlsx,
 } from "../../api/utils/exportUtils.ts";
 import ExportButton from "../../components/ExportButton.tsx";
+import {useAuth} from "../../auth/AuthContext.ts";
 
 const DEFAULT_PAGE_SIZE = 10;
 
 export default function MyReservationsPage() {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [reservations, setReservations] = useState<ReservationDto[]>([]);
   const [total, setTotal] = useState(0);
   const [reservationStatuses, setReservationStatuses] = useState<
@@ -215,7 +217,7 @@ export default function MyReservationsPage() {
   return (
     <Box>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Moje rezerwacje
+        {isAdmin ? "Lista rezerwacji" : "Moje rezerwacje"}
       </Typography>
 
       <Card sx={{ borderLeft: "5px solid #6b1020" }}>
